@@ -78,13 +78,13 @@ public class UserRegistrationDriver {
 	}
 	
 	private static boolean addUser(User.UserType userType, String userName) {
-		User user =  (userType == User.UserType.STUDENT) ? (new Student(userName)) : (new Instructor(userName));
-		
-		List<User> usersList = FlashCardDriver.getUsers();
-		usersList.add(user);
-
-		FlashCardDriver.setUsers(usersList);
-		
+		if (userType == (User.UserType.STUDENT)){
+			Student student = new Student(userName);
+			FlashCardDriver.addStudent(student);
+		} else if (userType == User.UserType.INSTRUCTOR) {
+			Instructor instructor = new Instructor(userName);
+			FlashCardDriver.addInstructor(instructor);
+		}
 		return true; 
 	}
 }

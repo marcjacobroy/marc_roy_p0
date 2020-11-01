@@ -15,17 +15,17 @@ public class Entry {
 	
 	private String text;
 	
-	private Language text_language;
+	private Language textLanguage;
 	
 	public Entry(String text) {
 		super();
 		this.text = text;
-		this.text_language = Language.ENGLISH;
+		this.textLanguage = Language.ENGLISH;
 	}
 
-	public Entry(String text, Language text_language) {
+	public Entry(String text, Language textLanguage) {
 		this(text);
-		this.text_language = text_language;
+		this.textLanguage = textLanguage;
 	}
 
 	public String getText() {
@@ -37,13 +37,10 @@ public class Entry {
 	}
 
 	public Language getText_language() {
-		return text_language;
+		return textLanguage;
 	}
 
-	public void setText_language(Language text_language) {
-		this.text_language = text_language;
-	}
-	
-	
-	
+	public void setText_language(Language textLanguage) {
+		this.textLanguage = textLanguage;
+	}	
 }

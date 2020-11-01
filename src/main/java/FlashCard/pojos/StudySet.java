@@ -8,12 +8,19 @@ public class StudySet {
 	private int studySetId;
 	
 	private PriorityQueue<Card> cards;
-
-	public StudySet(PriorityQueue<Card> cards) {
-		super();
+	
+	public StudySet() {
 		this.studySetId = studySetCount;
 		studySetCount ++;
+	}
+
+	public StudySet(PriorityQueue<Card> cards) {
+		this();
 		this.cards = cards;
+	}
+	
+	public void addCard(Card card) {
+		this.cards.add(card);
 	}
 
 	public static int getStudySetCount() {

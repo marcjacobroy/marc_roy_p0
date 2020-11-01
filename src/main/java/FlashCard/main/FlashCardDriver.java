@@ -4,6 +4,7 @@ package FlashCard.main;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -26,7 +27,54 @@ public class FlashCardDriver {
 	
 	private static List<User> users = new ArrayList<User>();
 	
+	private static List<Student> students = new ArrayList<Student>();
 	
+	private static List<Instructor> instructors = new ArrayList<Instructor>();
+	
+	public static void addStudent(Student student) {
+		students.add(student);
+		User user = student;
+		users.add(user);
+	}
+	
+	public static void addInstructor(Instructor instructor) {
+		instructors.add(instructor);
+		User user = instructor;
+		users.add(user);
+	}
+	
+	public static List<Student> getStudents() {
+		return students;
+	}
+
+	public static void setStudents(List<Student> students) {
+		FlashCardDriver.students = students;
+	}
+
+	public static List<Instructor> getInstructors() {
+		return instructors;
+	}
+
+	public static void setInstructors(List<Instructor> instructors) {
+		FlashCardDriver.instructors = instructors;
+	}
+
+	public static List<Course> getCourses() {
+		return courses;
+	}
+
+	public static void setCourses(List<Course> courses) {
+		FlashCardDriver.courses = courses;
+	}
+
+	public static List<StudySet> getStudySets() {
+		return studySets;
+	}
+
+	public static void setStudySets(List<StudySet> studySets) {
+		FlashCardDriver.studySets = studySets;
+	}
+
 	public static List<User> getUsers() {
 		return users;
 	}

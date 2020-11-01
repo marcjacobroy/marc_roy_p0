@@ -11,19 +11,30 @@ public class Course {
 	
 	private List<StudySet> studySets;
 	
+	private Instructor instructor;
 	
 	
-	
-	public Course(String courseName) {
+	public Course(String courseName, Instructor instructor) {
 		super();
+		this.instructor = instructor;
 		this.courseName = courseName;
 		this.courseId = courseCount;
 		courseCount++;
 	}
+	
+	
+	public Instructor getInstructor() {
+		return instructor;
+	}
 
-	public Course(String courseName, List<StudySet> studySets) {
-		this(courseName);
-		this.studySets = studySets;
+
+	public void setInstructor(Instructor instructor) {
+		this.instructor = instructor;
+	}
+
+
+	public void addStudySet(StudySet studySet) {
+		this.studySets.add(studySet);
 	}
 
 	public static int getCourseCount() {
