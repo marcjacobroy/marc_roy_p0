@@ -13,11 +13,16 @@ public class Course {
 	
 	
 	
-	public Course(String courseName, List<StudySet> studySets) {
+	
+	public Course(String courseName) {
 		super();
+		this.courseName = courseName;
 		this.courseId = courseCount;
 		courseCount++;
-		this.courseName = courseName;
+	}
+
+	public Course(String courseName, List<StudySet> studySets) {
+		this(courseName);
 		this.studySets = studySets;
 	}
 
