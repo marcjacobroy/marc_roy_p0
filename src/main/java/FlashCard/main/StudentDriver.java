@@ -57,7 +57,7 @@ public class StudentDriver {
 		List<Course> courses = this.student.getCourses();
 		System.out.println("Enrolled courses:");
 		for (Course course : courses) { 
-			System.out.println(course.getCourseName() + "with id "+ course.getCourseId());
+			System.out.println(course.getCourseName() + " with id "+ course.getCourseId());
 		}
 	}
 	

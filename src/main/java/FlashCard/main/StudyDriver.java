@@ -39,7 +39,7 @@ public class StudyDriver {
 				
 				System.out.println(card.getDef().getText());
 				
-				userInput = "";
+				userInput = null;
 				do {
 					System.out.println("Did you get the right answer? Type [y] for yes or [n] for no. Or, type [0] to stop studying.");
 					userInput = scan.nextLine();
