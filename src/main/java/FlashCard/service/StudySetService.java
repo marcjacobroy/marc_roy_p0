@@ -3,8 +3,7 @@ package FlashCard.service;
 import java.util.List;
 
 import FlashCard.pojos.StudySet;
-import FlashCard.pojos.Card;
-import java.util.PriorityQueue;
+
 
 public interface StudySetService {
 	

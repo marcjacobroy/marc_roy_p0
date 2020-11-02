@@ -130,6 +130,8 @@ public class StudentDriver {
 			
 			switch (userInput) {
 			case "1":
+				StudyDriver studyDriver = new StudyDriver(studySet);
+				studyDriver.Study();
 				break;
 			case "0":
 				System.out.println("До встречи!");

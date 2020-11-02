@@ -11,7 +11,7 @@ public class Card {
 	
 	private double percentage;
 	
-	private int count;
+	private int count = 1;
 	
 	public double getPercentage() {
 		return percentage;
