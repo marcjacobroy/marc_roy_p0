@@ -80,6 +80,7 @@ public class StudentDriver {
 				} catch(InputMismatchException e) {
 					System.out.println("Please type a valid int.");
 					courseId = -1;
+					log.error("Encountered InputMismatchException");
 				} finally {
 					scan.nextLine();
 				}
@@ -96,6 +97,7 @@ public class StudentDriver {
 				}
 			} catch(IllegalArgumentException e) {
 				System.out.println("This course does not exist.");
+				log.error("Encountered IllegalArgumentException");
 			}
 			
 		} while(!isEnrolled);
@@ -160,6 +162,7 @@ public class StudentDriver {
 				} catch(InputMismatchException e) {
 					System.out.println("Please type a valid int.");
 					studySetId = -1;
+					log.error("Encountered InputMismatchException");
 				} finally {
 					scan.nextLine();
 				}
@@ -172,6 +175,7 @@ public class StudentDriver {
 				}
 			} catch(IllegalArgumentException e) {
 				System.out.println("This study set does not exist.");
+				log.error("Encountered IllegalArgumentException");
 			}
 			
 		} while(!isValidSet);

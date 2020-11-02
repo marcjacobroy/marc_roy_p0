@@ -228,6 +228,7 @@ public class InstructorDriver {
 				} catch(InputMismatchException e) {
 					System.out.println("Please type a valid int.");
 					courseId = -1;
+					log.error("Encountered InputMismatchException");
 				} finally {
 					scan.nextLine();
 				}
@@ -240,6 +241,7 @@ public class InstructorDriver {
 				}
 			} catch(IllegalArgumentException e) {
 				System.out.println("This course doesn't exist.");
+				log.error("Encountered IlllegalArgumentException");
 			}
 		} while(!validCourse);
 		return course;
@@ -259,6 +261,7 @@ public class InstructorDriver {
 					} catch(InputMismatchException e) {
 						System.out.println("Please type a valid int.");
 						studySetId = -1;
+						log.error("Encountered InputMismatchException");
 					} finally {
 						scan.nextLine();
 					}
@@ -268,6 +271,7 @@ public class InstructorDriver {
 					foundSet = true;
 				} catch(IllegalArgumentException e) {
 					System.out.println("Study set doesn't exist.");
+					log.error("Encountered IllegalArgumentException");
 				}
 			} while (!foundSet);
 			return studySet;
@@ -287,6 +291,7 @@ public class InstructorDriver {
 				} catch(InputMismatchException e) {
 					System.out.println("Please type a valid int.");
 					studentId = -1;
+					log.error("Encountered InputMismatchException");
 				} finally {
 					scan.nextLine();
 				}
@@ -296,6 +301,7 @@ public class InstructorDriver {
 				foundStudent = true;
 			} catch(IllegalArgumentException e) {
 				System.out.println("Student doesn't exist.");
+				log.error("Encountered IllegalArgumentException");
 			}
 		} while (!foundStudent);
 		return student;

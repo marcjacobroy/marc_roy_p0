@@ -1,0 +1,8 @@
+Program has started
+Starting user registration.
+Requesting user type for registration.
+Program has started
+Starting user registration.
+Requesting user type for registration.
+Requesting username for registration.
+Adding user info to cache.
