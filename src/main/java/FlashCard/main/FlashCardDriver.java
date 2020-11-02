@@ -1,6 +1,9 @@
 package FlashCard.main;
 
 import java.util.Scanner;
+import java.util.Arrays;
+import java.util.List;
+
 
 import org.apache.log4j.Logger;
 
@@ -31,6 +34,8 @@ public class FlashCardDriver {
 			System.out.println("Welcome to FlashCard! Please choose one of the following options:");
 			System.out.println("[1] Register as new user");
 			System.out.println("[2] Log in");
+			System.out.println("[3] View all registered students");
+			System.out.println("[4] View all registered instructors");
 			System.out.println("[0] exit");
 			
 			userInput = scan.nextLine();
@@ -49,9 +54,24 @@ public class FlashCardDriver {
 				int userId = UserLoginDriver.logInUser();
 				if (userId != -1) {
 					System.out.println("Login successful!");
+					if (studentsCache.containsStudentWithId(userId)){
+						StudentDriver studentDriver = new StudentDriver(studentsCache.getStudentWithId(userId));
+						studentDriver.studentActions();
+					} else if (instructorsCache.containsInstructorWithId(userId)){
+						InstructorDriver instructorDriver = new InstructorDriver(instructorsCache.getInstructorWithId(userId));
+						instructorDriver.instructorActions();
+					}
 				} else {
 					System.out.println("Login failed.");
 				}
+				break;
+			case "3":
+				List<String> studentList = studentsCache.toStringList();
+				System.out.println(Arrays.toString(studentList.toArray()));
+				break;
+			case "4":
+				List<String> instructorList = instructorsCache.toStringList();
+				System.out.println(Arrays.toString(instructorList.toArray()));
 				break;
 			case "0":
 				System.out.println("Auf Wiedersehen");

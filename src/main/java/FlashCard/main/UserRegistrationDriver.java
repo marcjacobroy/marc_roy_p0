@@ -71,9 +71,12 @@ public class UserRegistrationDriver {
 	private static boolean addUser(User.UserType userType, String userName) {
 		if (userType == (User.UserType.STUDENT)){
 			FlashCardDriver.studentsCache.createStudent(userName);
+			return true; 
 		} else if (userType == User.UserType.INSTRUCTOR) {
 			FlashCardDriver.instructorsCache.createInstructor(userName);
+			return true; 
 		}
-		return true; 
+		return false;
+		
 	}
 }

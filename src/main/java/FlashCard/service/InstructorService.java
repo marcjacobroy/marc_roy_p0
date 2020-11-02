@@ -17,4 +17,6 @@ public interface InstructorService {
 	public Instructor getInstructorWithId (int id); 
 	
 	public Instructor getInstructorWithUserName (String userName);
+	
+	public List<String> toStringList();
 }

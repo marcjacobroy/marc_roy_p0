@@ -33,7 +33,7 @@ public class CourseServiceImpl implements CourseService {
 
 	@Override
 	public boolean containsCourseWithCourseName(String courseName) {
-		return courseCache.containsMatchingElt(p -> p.getCourseName() == courseName);
+		return courseCache.containsMatchingElt(p -> p.getCourseName().equals(courseName));
 
 	}
 
@@ -44,7 +44,7 @@ public class CourseServiceImpl implements CourseService {
 
 	@Override
 	public Course getCourseWithCourseName(String courseName) {
-		return courseCache.retrieveMatchingElt(p -> p.getCourseName() == courseName);
+		return courseCache.retrieveMatchingElt(p -> p.getCourseName().equals(courseName));
 	}
 
 }

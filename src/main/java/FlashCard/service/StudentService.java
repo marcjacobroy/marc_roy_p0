@@ -17,4 +17,6 @@ public interface StudentService {
 	public Student getStudentWithId (int id); 
 	
 	public Student getStudentWithUserName (String userName);
+	
+	public List<String> toStringList();
 }

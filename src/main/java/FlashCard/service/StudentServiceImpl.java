@@ -37,12 +37,17 @@ public class StudentServiceImpl implements StudentService {
 
 	@Override
 	public boolean containsStudentWithName(String userName) {
-		return studentCache.containsMatchingElt(p -> p.getUserName() == userName);
+		return studentCache.containsMatchingElt(p -> p.getUserName().equals(userName));
 	}
 
 	@Override
 	public Student getStudentWithUserName(String userName) {
-		return studentCache.retrieveMatchingElt(p -> p.getUserName() == userName);
+		return studentCache.retrieveMatchingElt(p -> p.getUserName().equals(userName));
 	}
 
+	@Override
+	public List<String> toStringList() {
+		return studentCache.toStringList();
+	}
+	
 }

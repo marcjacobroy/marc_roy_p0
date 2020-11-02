@@ -29,7 +29,7 @@ public class UserLoginDriver {
 		}
 	}
 	
-	private static User.UserType getUserType(){
+	private static UserType getUserType(){
 		String userInputUserType;
 		User.UserType userType = null; 
 		
@@ -43,10 +43,10 @@ public class UserLoginDriver {
 			
 			switch (userInputUserType) {
 			case "1":
-				userType = User.UserType.STUDENT;
+				userType = UserType.STUDENT;
 				return userType;
 			case "2":
-				userType = User.UserType.INSTRUCTOR;
+				userType = UserType.INSTRUCTOR;
 				return userType;
 			case "0":
 				System.out.println("ArrivederLa!");
@@ -59,7 +59,7 @@ public class UserLoginDriver {
 		
 		return userType;
 	}
-	private static String getName(User.UserType userType) {
+	private static String getName(UserType userType) {
 		String userName;
 		boolean nameExists = false;
 		
@@ -67,10 +67,12 @@ public class UserLoginDriver {
 			System.out.println("What is your username?");
 			userName = scan.nextLine();
 			
-			if (userType == User.UserType.STUDENT) {
+			if (userType == UserType.STUDENT) {
 				nameExists = FlashCardDriver.studentsCache.containsStudentWithName(userName); 
-			} else {
+			} else if (userType == UserType.INSTRUCTOR){
 				nameExists = FlashCardDriver.instructorsCache.containsInstructorWithName(userName);
+			} else {
+				System.out.println("Something went wrong when logging you in. Sorry!");
 			}
 			if (nameExists) {
 				return userName;

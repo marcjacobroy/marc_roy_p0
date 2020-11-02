@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 public class CustomCacheServiceSimpleInMemory <T> implements CustomCacheService<T> {
 	
@@ -68,6 +69,15 @@ public class CustomCacheServiceSimpleInMemory <T> implements CustomCacheService<
 	public boolean containsMatchingElt(Predicate<T> p) {
 		return cache.stream().filter(p).findFirst().isPresent();
 	}
-	
+
+	@Override
+	public List<String> toStringList() {
+		List<String> list = new ArrayList<String>();
+		
+		for (T temp : this.cache) {
+			list.add(temp.toString());
+		}
+		return list;
+	}
 }
 

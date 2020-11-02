@@ -36,12 +36,17 @@ public class InstructorServiceImpl implements InstructorService {
 
 	@Override
 	public boolean containsInstructorWithName(String userName) {
-		return instructorCache.containsMatchingElt(p -> p.getUserName() == userName);
+		return instructorCache.containsMatchingElt(p -> p.getUserName().equals(userName));
 	}
 
 	@Override
 	public Instructor getInstructorWithUserName(String userName) {
-		return instructorCache.retrieveMatchingElt(p -> p.getUserName() == userName);
+		return instructorCache.retrieveMatchingElt(p -> p.getUserName().equals(userName));
+	}
+
+	@Override
+	public List<String> toStringList() {
+		return instructorCache.toStringList();
 	}
 
 }

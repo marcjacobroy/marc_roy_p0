@@ -21,4 +21,6 @@ public interface CustomCacheService <T> {
 	
 	public boolean containsMatchingElt(Predicate<T> p);
 	
+	public List<String> toStringList();
+	
 }
