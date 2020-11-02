@@ -29,7 +29,7 @@ public class InstructorDriver {
 		this.instructor = instructor;
 	}
 
-	public boolean instructorActions() {
+	public void instructorActions() {
 		
 		String userInput; 
 		do {
@@ -66,7 +66,6 @@ public class InstructorDriver {
 			
 		} while (!"0".equals(userInput));
 		
-		return true; 
 	}
 	
 	private Course createCourse() {

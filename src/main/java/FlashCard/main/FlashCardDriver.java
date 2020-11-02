@@ -107,10 +107,12 @@ public class FlashCardDriver {
 				break;
 	
 			case "2":
-				if (UserLoginDriver.logInUser()) {
+				int userId = UserLoginDriver.logInUser();
+				if (userId != -1) {
 					System.out.println("Login successful!");
+					
 				} else {
-					System.out.println("Login failed");
+					System.out.println("Login failed.");
 				}
 				break;
 			case "0":
