@@ -14,6 +14,6 @@ public class Instructor extends User {
 	}
 	
 	public boolean isInstructor(Course course) {
-		return this.getCourses().contains(course);
+		return super.isEnrolled(course);
 	}
 }

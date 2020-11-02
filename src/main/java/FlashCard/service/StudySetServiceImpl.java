@@ -1,9 +1,7 @@
 package FlashCard.service;
 
 import java.util.List;
-import java.util.PriorityQueue;
 
-import FlashCard.pojos.Card;
 import FlashCard.pojos.StudySet;
 
 public class StudySetServiceImpl implements StudySetService {
@@ -11,8 +9,8 @@ public class StudySetServiceImpl implements StudySetService {
 	private CustomCacheService<StudySet> studySetCache = new CustomCacheServiceSimpleInMemory<StudySet>();
 
 	@Override
-	public StudySet createStudySet(PriorityQueue<Card> cards) {
-		StudySet studySet = new StudySet(cards);
+	public StudySet createStudySet() {
+		StudySet studySet = new StudySet();
 		studySetCache.addToCache(studySet);
 		return studySet;
 	}

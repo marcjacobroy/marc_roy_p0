@@ -31,7 +31,10 @@ public class User {
 		this(userName, userType);
 		this.courses = courses;
 	}
-
+	
+	public boolean isEnrolled(Course course) {
+		return courses.contains(course);
+	}
 	public int getUserId() {
 		return userId;
 	}

@@ -8,7 +8,7 @@ import java.util.PriorityQueue;
 
 public interface StudySetService {
 	
-	public StudySet createStudySet(PriorityQueue<Card> cards);
+	public StudySet createStudySet();
 	
 	public List<StudySet> getAllStudySets();
 	

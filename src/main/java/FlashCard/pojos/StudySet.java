@@ -12,11 +12,8 @@ public class StudySet {
 	public StudySet() {
 		this.studySetId = studySetCount;
 		studySetCount ++;
-	}
-
-	public StudySet(PriorityQueue<Card> cards) {
-		this();
-		this.cards = cards;
+		CardComparer comparer = new CardComparer();
+		this.cards = new PriorityQueue<Card>(comparer);
 	}
 	
 	public void addCard(Card card) {

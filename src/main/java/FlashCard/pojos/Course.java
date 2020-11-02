@@ -22,7 +22,9 @@ public class Course {
 		courseCount++;
 	}
 	
-	
+	public boolean studySetIsInCourse(StudySet studySet) {
+		return studySets.contains(studySet);
+	}
 	public Instructor getInstructor() {
 		return instructor;
 	}
