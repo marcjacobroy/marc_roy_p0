@@ -1,7 +1,7 @@
 package FlashCard.main;
 
 import java.util.Scanner;
-import java.util.List;
+
 
 import org.apache.log4j.Logger;
 

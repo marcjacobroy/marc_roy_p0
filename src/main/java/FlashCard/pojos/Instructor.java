@@ -1,7 +1,7 @@
 package FlashCard.pojos;
 
 import java.util.List;
-import FlashCard.pojos.User.UserType;
+
 
 public class Instructor extends User {
 

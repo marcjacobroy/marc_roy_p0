@@ -28,7 +28,7 @@ public class InstructorDriver {
 	}
 
 	public void instructorActions() {
-		
+		log.info("Selecting an instructor action");
 		String userInput; 
 		do {
 			System.out.println("What would you like to do?");
