@@ -1,87 +1,26 @@
 package FlashCard.main;
 
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
-import FlashCard.pojos.Card;
-import FlashCard.pojos.Student;
-import FlashCard.pojos.Instructor;
-import FlashCard.pojos.Course;
-import FlashCard.pojos.StudySet;
-import FlashCard.pojos.Entry;
-import FlashCard.pojos.User;
+import FlashCard.service.StudentServiceImpl;
+import FlashCard.service.InstructorServiceImpl;
+import FlashCard.service.CourseServiceImpl;
+import FlashCard.service.StudySetServiceImpl;
 
 public class FlashCardDriver {
 	private static Logger log = Logger.getRootLogger();
 
 	private static Scanner scan = new Scanner(System.in);
 	
-	private static List<StudySet> studySets = new ArrayList<StudySet>();
+	public static StudentServiceImpl studentsCache = new StudentServiceImpl();
 	
-	private static List<Course> courses = new ArrayList<Course>();
+	public static InstructorServiceImpl instructorsCache = new InstructorServiceImpl();
 	
-	private static List<User> users = new ArrayList<User>();
+	public static CourseServiceImpl coursesCache = new CourseServiceImpl();
 	
-	private static List<Student> students = new ArrayList<Student>();
-	
-	private static List<Instructor> instructors = new ArrayList<Instructor>();
-	
-	public static void addStudent(Student student) {
-		students.add(student);
-		User user = student;
-		users.add(user);
-	}
-	
-	public static void addInstructor(Instructor instructor) {
-		instructors.add(instructor);
-		User user = instructor;
-		users.add(user);
-	}
-	
-	public static List<Student> getStudents() {
-		return students;
-	}
-
-	public static void setStudents(List<Student> students) {
-		FlashCardDriver.students = students;
-	}
-
-	public static List<Instructor> getInstructors() {
-		return instructors;
-	}
-
-	public static void setInstructors(List<Instructor> instructors) {
-		FlashCardDriver.instructors = instructors;
-	}
-
-	public static List<Course> getCourses() {
-		return courses;
-	}
-
-	public static void setCourses(List<Course> courses) {
-		FlashCardDriver.courses = courses;
-	}
-
-	public static List<StudySet> getStudySets() {
-		return studySets;
-	}
-
-	public static void setStudySets(List<StudySet> studySets) {
-		FlashCardDriver.studySets = studySets;
-	}
-
-	public static List<User> getUsers() {
-		return users;
-	}
-
-	public static void setUsers(List<User> users) {
-		FlashCardDriver.users = users;
-	}
+	public static StudySetServiceImpl studySetsCache = new StudySetServiceImpl();
 
 	public static void main(String args[]) {
 		log.info("Program has started");
@@ -110,7 +49,6 @@ public class FlashCardDriver {
 				int userId = UserLoginDriver.logInUser();
 				if (userId != -1) {
 					System.out.println("Login successful!");
-					
 				} else {
 					System.out.println("Login failed.");
 				}

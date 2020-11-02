@@ -1,15 +1,10 @@
 package FlashCard.main;
 
 import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
 import FlashCard.pojos.User;
-import FlashCard.pojos.Student;
-import FlashCard.pojos.Instructor;
 import FlashCard.pojos.User.UserType;
 
 public class UserLoginDriver {
@@ -18,96 +13,73 @@ public class UserLoginDriver {
 
 	private static Scanner scan = new Scanner(System.in);
 	
-	public static boolean containsName(final List<User> list, final String name) {
-		return list.stream().filter(p -> p.getUserName().equals(name)).findFirst().isPresent();
-	}
-	
-	public static boolean containsStudentName(final List<Student> list, final String name) {
-		return list.stream().filter(p -> p.getUserName().equals(name)).findFirst().isPresent();
-	}
-	
-	public static boolean containsInstructorName(final List<Instructor> list, final String name) {
-		return list.stream().filter(p -> p.getUserName().equals(name)).findFirst().isPresent();
-	}
-	
-	public static User getUserWithName(final List<User> list, final String name) {
-		if (containsName(list, name)) {
-			return list.stream().filter(p -> p.getUserName().equals(name)).collect(Collectors.toList()).get(0);
-		} else {
-			throw new IllegalArgumentException("No such user exists.");
-		}
-		
-	}
-	
-	public static Student getStudentWithName(final List<Student> list, final String name) {
-		if (containsStudentName(list, name)) {
-			return list.stream().filter(p -> p.getUserName().equals(name)).collect(Collectors.toList()).get(0);
-		} else {
-			throw new IllegalArgumentException("No such user exists.");
-		}
-		
-	}
-	
-	public static Instructor getInstructorWithName(final List<Instructor> list, final String name) {
-		if (containsInstructorName(list, name)) {
-			return list.stream().filter(p -> p.getUserName().equals(name)).collect(Collectors.toList()).get(0);
-		} else {
-			throw new IllegalArgumentException("No such user exists.");
-		}
-		
-	}
-	
 	public static int logInUser() {
 		
 		log.info("Starting user login.");
 		
-		UserType userType = null;
+		UserType userType = getUserType();
+		String userName = getName(userType);
+		switch (userType) {
+		case STUDENT:
+			return FlashCardDriver.studentsCache.getStudentWithUserName(userName).getUserId();
+		case INSTRUCTOR:
+			return FlashCardDriver.instructorsCache.getInstructorWithUserName(userName).getUserId();
+		default:
+			return -1;
+		}
+	}
+	
+	private static User.UserType getUserType(){
 		String userInputUserType;
+		User.UserType userType = null; 
 		
 		do {
-			System.out.println("Would you like to log in as a student or as an instructor?");
-			System.out.println("[1] Log in as student.");
-			System.out.println("[2] Log in as instructor.");
-			
+			System.out.println("Are you a student or an instructor?");
+			System.out.println("[1] Student.");
+			System.out.println("[2] Instructor.");
+			System.out.println("[0] Exit.");
+		
 			userInputUserType = scan.nextLine();
 			
-			switch(userInputUserType) {
+			switch (userInputUserType) {
 			case "1":
-				userType = UserType.STUDENT;
-				break;
+				userType = User.UserType.STUDENT;
+				return userType;
 			case "2":
-				userType = UserType.INSTRUCTOR;
+				userType = User.UserType.INSTRUCTOR;
+				return userType;
+			case "0":
+				System.out.println("ArrivederLa!");
 				break;
 			default:
-				System.out.println("Please type either [1] or [2].");
+				System.out.println("Invalid choice. Please select either '1', '2' or '0'.");
+				break;
 			}
-		} while (userType == null);
+		} while (!"0".equals(userInputUserType));
 		
+		return userType;
+	}
+	private static String getName(User.UserType userType) {
 		String userName;
-		boolean userExists; 
+		boolean nameExists = false;
 		
 		do {
-			System.out.println("Please enter your username to log in.");
+			System.out.println("What is your username?");
 			userName = scan.nextLine();
 			
-			if (userType == UserType.INSTRUCTOR) {
-				List<Instructor> instructorsList = FlashCardDriver.getInstructors();
-				if (containsInstructorName(instructorsList, userName)) {
-					Instructor instructor = getInstructorWithName(instructorsList, userName);
-					return instructor.getUserId();
-				} else {
-					System.out.println("Username " + userName + " is not a registered instructor. Please try again.");
-				}
+			if (userType == User.UserType.STUDENT) {
+				nameExists = FlashCardDriver.studentsCache.containsStudentWithName(userName); 
 			} else {
-				List<Student> studentsList = FlashCardDriver.getStudents();
-				if (containsStudentName(studentsList, userName)) {
-					Student student = getStudentWithName(studentsList, userName);
-					return student.getUserId();
-				} else {
-					System.out.println("Username " + userName + " is not a registered student. Please try again.");
-				}
+				nameExists = FlashCardDriver.instructorsCache.containsInstructorWithName(userName);
 			}
-		} while (!"".equals(userName));
-	return -1;
+			if (nameExists) {
+				return userName;
+			} else {
+				System.out.println("Username " + userName + " is not a registered " + userType + ". Please try again.");
+			}
+			
+		} while (!"".equals(userName) && !nameExists);
+		
+		return userName;
 	}
 }

@@ -1,24 +1,17 @@
 package FlashCard.main;
 
 import java.util.Scanner;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import FlashCard.pojos.User;
-import FlashCard.pojos.Student;
-import FlashCard.pojos.Instructor;
 
 public class UserRegistrationDriver {
 	
 	private static Logger log = Logger.getRootLogger();
 
 	private static Scanner scan = new Scanner(System.in);
-	
-	public static boolean containsName(final List<User> list, final String name) {
-		return list.stream().filter(p -> p.getUserName().equals(name)).findFirst().isPresent();
-	}
 	
 	public static boolean registerUser() {
 		log.info("Starting user registration");
@@ -61,13 +54,11 @@ public class UserRegistrationDriver {
 		String userName;
 		boolean nameTaken;
 		
-		List<User> usersList = FlashCardDriver.getUsers();
-		
 		do {
 			System.out.println("What is your username?");
 			userName = scan.nextLine();
 			
-			nameTaken = containsName(usersList, userName); 
+			nameTaken = FlashCardDriver.studentsCache.containsStudentWithName(userName); 
 			if (nameTaken) {
 				System.out.println("Username already taken. Please choose a different one.");
 			}
@@ -79,11 +70,9 @@ public class UserRegistrationDriver {
 	
 	private static boolean addUser(User.UserType userType, String userName) {
 		if (userType == (User.UserType.STUDENT)){
-			Student student = new Student(userName);
-			FlashCardDriver.addStudent(student);
+			FlashCardDriver.studentsCache.createStudent(userName);
 		} else if (userType == User.UserType.INSTRUCTOR) {
-			Instructor instructor = new Instructor(userName);
-			FlashCardDriver.addInstructor(instructor);
+			FlashCardDriver.instructorsCache.createInstructor(userName);
 		}
 		return true; 
 	}
