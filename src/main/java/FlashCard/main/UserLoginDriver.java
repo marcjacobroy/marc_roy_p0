@@ -18,7 +18,13 @@ public class UserLoginDriver {
 		log.info("Starting user login.");
 		
 		UserType userType = getUserType();
+		if (userType == null) {
+			return -1;
+		}
 		String userName = getName(userType);
+		if (userName == null){
+			return -1;
+		}
 		switch (userType) {
 		case STUDENT:
 			return FlashCardDriver.studentsCache.getStudentWithUserName(userName).getUserId();
@@ -30,6 +36,7 @@ public class UserLoginDriver {
 	}
 	
 	private static UserType getUserType(){
+		log.info("Getting user type for login.");
 		String userInputUserType;
 		User.UserType userType = null; 
 		
@@ -60,13 +67,16 @@ public class UserLoginDriver {
 		return userType;
 	}
 	private static String getName(UserType userType) {
+		log.info("Getting username for login.");
 		String userName;
 		boolean nameExists = false;
 		
 		do {
-			System.out.println("What is your username?");
+			System.out.println("What is your username? Or type [0] to exit.");
 			userName = scan.nextLine();
-			
+			if (userName.equals("0")) {
+				return null;
+			}
 			if (userType == UserType.STUDENT) {
 				nameExists = FlashCardDriver.studentsCache.containsStudentWithName(userName); 
 			} else if (userType == UserType.INSTRUCTOR){

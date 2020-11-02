@@ -9,7 +9,10 @@ public class StudySet {
 	
 	private PriorityQueue<Card> cards;
 	
-	public StudySet() {
+	public String studySetName;
+	
+	public StudySet(String studySetName) {
+		this.studySetName = studySetName;
 		this.studySetId = studySetCount;
 		studySetCount ++;
 		CardComparer comparer = new CardComparer();
@@ -42,6 +45,14 @@ public class StudySet {
 
 	public void setCards(PriorityQueue<Card> cards) {
 		this.cards = cards;
+	}
+
+	public String getStudySetName() {
+		return studySetName;
+	}
+
+	public void setStudySetName(String studySetName) {
+		this.studySetName = studySetName;
 	}
 
 	@Override

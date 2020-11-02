@@ -1,6 +1,7 @@
 package FlashCard.pojos;
 
 import java.util.List;
+import java.util.ArrayList;
 
 public class Course {
 	private static int courseCount;
@@ -9,7 +10,7 @@ public class Course {
 	
 	private String courseName; 
 	
-	private List<StudySet> studySets;
+	private List<StudySet> studySets = new ArrayList<StudySet>();
 	
 	private Instructor instructor;
 	

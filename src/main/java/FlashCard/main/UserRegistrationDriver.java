@@ -2,7 +2,6 @@ package FlashCard.main;
 
 import java.util.Scanner;
 
-
 import org.apache.log4j.Logger;
 
 import FlashCard.pojos.User;
@@ -14,13 +13,20 @@ public class UserRegistrationDriver {
 	private static Scanner scan = new Scanner(System.in);
 	
 	public static boolean registerUser() {
-		log.info("Starting user registration");
+		log.info("Starting user registration.");
 		User.UserType userType = getUserType();
+		if (userType == null) {
+			return false;
+		}
 		String userName = getName();
+		if (userName == null) {
+			return false;
+		}
 		return addUser(userType, userName);
 	}
 	
 	private static User.UserType getUserType(){
+		log.info("Requesting user type for registration.");
 		String userInputUserType;
 		User.UserType userType = null; 
 		
@@ -40,24 +46,26 @@ public class UserRegistrationDriver {
 				userType = User.UserType.INSTRUCTOR;
 				return userType;
 			case "0":
-				System.out.println("Au revoir!");
-				break;
+				return null;
 			default:
-				System.out.println("Invalid choice. Please select either '1', '2' or '0'.");
+				System.out.println("Invalid choice. Please select either '1' or '2' or '0'.");
 				break;
 			}
-		} while (!"0".equals(userInputUserType));
+		} while (userType == null);
 		
 		return userType;
 	}
 	private static String getName() {
+		log.info("Requesting username for registration.");
 		String userName;
 		boolean nameTaken;
 		
 		do {
-			System.out.println("What is your username?");
+			System.out.println("Please choose your username. Or type [0] to exit.");
 			userName = scan.nextLine();
-			
+			if (userName.equals("0")) {
+				return null;
+			}
 			nameTaken = FlashCardDriver.studentsCache.containsStudentWithName(userName); 
 			if (nameTaken) {
 				System.out.println("Username already taken. Please choose a different one.");
@@ -69,6 +77,7 @@ public class UserRegistrationDriver {
 	}
 	
 	private static boolean addUser(User.UserType userType, String userName) {
+		log.info("Adding user info to cache.");
 		if (userType == (User.UserType.STUDENT)){
 			FlashCardDriver.studentsCache.createStudent(userName);
 			return true; 
@@ -77,6 +86,5 @@ public class UserRegistrationDriver {
 			return true; 
 		}
 		return false;
-		
 	}
 }

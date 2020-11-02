@@ -18,8 +18,8 @@ public class StudySetServiceImpl implements StudySetService {
 	}
 
 	@Override
-	public StudySet createStudySet() {
-		StudySet studySet = new StudySet();
+	public StudySet createStudySet(String studySetName) {
+		StudySet studySet = new StudySet(studySetName);
 		studySetCache.addToCache(studySet);
 		return studySet;
 	}

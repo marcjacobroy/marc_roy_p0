@@ -7,7 +7,7 @@ import FlashCard.pojos.StudySet;
 
 public interface StudySetService {
 	
-	public StudySet createStudySet();
+	public StudySet createStudySet(String studySetName);
 	
 	public List<StudySet> getAllStudySets();
 	

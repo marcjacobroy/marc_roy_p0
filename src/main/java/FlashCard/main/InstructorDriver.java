@@ -1,6 +1,7 @@
 package FlashCard.main;
 
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 
@@ -26,42 +27,58 @@ public class InstructorDriver {
 		super();
 		this.instructor = instructor;
 	}
-
+	
 	public void instructorActions() {
-		log.info("Selecting an instructor action");
-		String userInput; 
+		log.info("Selecting an instructor action.");
+		String userInput;
 		do {
+
 			System.out.println("What would you like to do?");
 			System.out.println("[1] Create a course.");
 			System.out.println("[2] Create a study set.");
 			System.out.println("[3] Add a study set to a course.");
 			System.out.println("[4] Assign a student to a course.");
-			System.out.println("[0] Exit.");
+			System.out.println("[0] Logout.");
 			
 			userInput = scan.nextLine();
 			
 			switch (userInput) {
+			
 			case "1":
-				createCourse();
-				System.out.println("Successfully created course!");
+				if (createCourse()) {
+					System.out.println("Successfully created course!");
+				} else {
+					System.out.println("Something went wrong. We're sorry.");
+				}
 				break;
 			case "2":
-				createStudySet();
-				System.out.println("Successfully created study set!");
+				if (createStudySet()) {
+					System.out.println("Successfully created study set!");
+				} else {
+					System.out.println("Something went wrong. We're sorry.");
+				}
 				break;
 			case "3":
-				assignStudySetToCourse();
-				System.out.println("Successfully assigned study set to course!");
+				if (assignStudySetToCourse()) {
+					System.out.println("Successfully assigned study set to course!");
+				} else {
+					System.out.println("Something went wrong. We're sorry.");
+				}
 				break;
 			case "4":
-				assignStudentToCourse();
-				System.out.println("Successfully assigned student to course!");
+				if (assignStudentToCourse()) {
+					System.out.println("Successfully assigned student to course!");
+				} else {
+					System.out.println("Something went wrong. We're sorry.");
+				}
 				break;
 			case "0":
+				log.info("Instructor is leaving.");
 				System.out.println("Tchau!");
 				break;
 			default:
-				System.out.println("Invalid choice. Please select either '1', '2' or '0'.");
+				System.out.println("string = " + userInput);
+				System.out.println("Invalid choice. Please select either '1', '2', '3', '4' or '0'.");
 				break;
 			}
 			
@@ -69,21 +86,25 @@ public class InstructorDriver {
 		
 	}
 	
-	private Course createCourse() {
+	private boolean createCourse() {
+		log.info("Instructor would like to create course.");
 		String courseName;
 		
 		System.out.println("What is the course name?");
 		
 		do {
 			courseName = scan.nextLine();
-		} while (!"".equals(courseName));
+		} while ("".equals(courseName));
 		
 		Course course = FlashCardDriver.coursesCache.createCourse(courseName, this.instructor);
 		instructor.addCourse(course);
-		return course;
+		log.info("Created course.");
+		System.out.println("Course id is " + course.getCourseId());
+		return true;
 	}
 	
 	private static Language pickLanguage() {
+		log.info("Instructor is choosing a language");
 		String userInputLanguage;
 		do {
 			System.out.println("Pick a language!");
@@ -123,16 +144,17 @@ public class InstructorDriver {
 	return null;
 	}
 	
-	private StudySet createStudySet(){
+	private boolean createStudySet(){
 		
-		StudySet studySet = new StudySet();
+		log.info("Instructor would like to create study set.");
 		
 		String userInputStudySetName;
+		System.out.println("What is the study set name?");
 		do {
-			System.out.println("What is the study set name?");
 			userInputStudySetName = scan.nextLine();
-		} while (!"".equals(userInputStudySetName));
+		} while ("".equals(userInputStudySetName));
 		
+		StudySet studySet = FlashCardDriver.studySetsCache.createStudySet(userInputStudySetName);
 		Language termLanguage;
 		Language defLanguage;
 		
@@ -140,6 +162,7 @@ public class InstructorDriver {
 		termLanguage = pickLanguage();
 		System.out.println("What is the language of the definitions?");
 		defLanguage = pickLanguage();
+		boolean atLeastOneCard = false;
 		
 		String addCardUserInput;
 		do {
@@ -149,24 +172,29 @@ public class InstructorDriver {
 			
 			addCardUserInput = scan.nextLine();
 			
-			
 			switch(addCardUserInput) {
 			case "1":
 				Card card = createCard(termLanguage, defLanguage);
 				studySet.addCard(card);
+				atLeastOneCard = true;
 				break;
 			case "0":
-				System.out.println("Completing set...");
+				if (atLeastOneCard) {
+					System.out.println("Completing set...");
+				} 
+				break;
 			default:
 				System.out.println("Invalid choice. Please type [1] or [0].");
 			}
-		} while (!"0".equals(addCardUserInput));
+		} while (!"0".equals(addCardUserInput) || !atLeastOneCard);
+		System.out.println("Set id is " + studySet.getStudySetId());
 		
-		return studySet;
+		return true;
 		
 	}
 	
 	private Card createCard(Language termLanguage, Language defLanguage) {
+		log.info("Instructor is creating card.");
 		System.out.println("Please enter term:");
 		String termText = scan.nextLine();
 		Entry term = new Entry(termText, termLanguage);
@@ -178,42 +206,98 @@ public class InstructorDriver {
 	}
 	
 	private Course getCourse() {
+		log.info("Instructor is choosing course.");
 		boolean validCourse = false;
+		Course course = null;
+		int courseId = -1;
 		do {
-			System.out.println("Please enter course Id.");
-			int courseId = scan.nextInt();
-			Course course = FlashCardDriver.coursesCache.getCourseWithId(courseId);
-			if (this.instructor.isInstructor(course)) {
-				validCourse = true;
-				return course;
-			} else {
-				System.out.println("Invalid course. Are you sure you're the instructor?");
+			do {
+				System.out.println("Please enter course id.");
+				try {
+					courseId = scan.nextInt();
+				} catch(InputMismatchException e) {
+					System.out.println("Please type a valid int.");
+					courseId = -1;
+				} finally {
+					scan.nextLine();
+				}
+			} while(courseId == -1);
+			try {
+				course = FlashCardDriver.coursesCache.getCourseWithId(courseId);
+				validCourse = this.instructor.isInstructor(course);
+				if(!validCourse) {
+					System.out.println("Invalid course. Are you sure you're the instructor?");
+				}
+			} catch(IllegalArgumentException e) {
+				System.out.println("This course doesn't exist.");
 			}
 		} while(!validCourse);
-		return null;
+		return course;
 	}
 	
 	private StudySet getStudySet() {
-			System.out.println("Please enter study set Id");
-			int studySetId = scan.nextInt();
-			return FlashCardDriver.studySetsCache.getStudySetWithId(studySetId);
+			StudySet studySet = null;
+			boolean foundSet = false;
+			int studySetId = -1;
+			do {
+				System.out.println("Please enter study set Id");
+				do {
+					try {
+						studySetId = scan.nextInt();
+					} catch(InputMismatchException e) {
+						System.out.println("Please type a valid int.");
+						studySetId = -1;
+					} finally {
+						scan.nextLine();
+					}
+				} while(studySetId == -1);
+				try {
+					studySet = FlashCardDriver.studySetsCache.getStudySetWithId(studySetId);
+					foundSet = true;
+				} catch(IllegalArgumentException e) {
+					System.out.println("Study set doesn't exist.");
+				}
+			} while (!foundSet);
+			return studySet;
 	}
 	
 	private Student getStudent() {
-		System.out.println("Please enter student Id");
-		int studentId = scan.nextInt();
-		return FlashCardDriver.studentsCache.getStudentWithId(studentId);
+		Student student = null;
+		boolean foundStudent = false;
+		int studentId = -1;
+		do {
+			System.out.println("Please enter student Id");
+			do {
+				try {
+					studentId = scan.nextInt();
+				} catch(InputMismatchException e) {
+					System.out.println("Please type a valid int.");
+					studentId = -1;
+				} finally {
+					scan.nextLine();
+				}
+			} while(studentId == -1);
+			try {
+				student = FlashCardDriver.studentsCache.getStudentWithId(studentId);
+				foundStudent = true;
+			} catch(IllegalArgumentException e) {
+				System.out.println("Student doesn't exist.");
+			}
+		} while (!foundStudent);
+		return student;
 	}
 
-	private void assignStudySetToCourse() {
+	private boolean assignStudySetToCourse() {
 		Course course = getCourse();
 		StudySet studySet = getStudySet();
 		course.addStudySet(studySet);
+		return true;
 	}
 	
-	private void assignStudentToCourse() {
+	private boolean assignStudentToCourse() {
 		Course course = getCourse();
 		Student student = getStudent();
 		student.addCourse(course);
+		return true;
 	}
 }

@@ -1,7 +1,7 @@
 package FlashCard.pojos;
 
 import java.util.List; 
-
+import java.util.ArrayList;
 public class User {
 	
 	public enum UserType{
@@ -15,7 +15,7 @@ public class User {
 	
 	private String userName;
 	
-	private List<Course> courses;
+	private List<Course> courses = new ArrayList<Course>();
 	
 	private UserType userType;
 

@@ -40,10 +40,10 @@ public class StudySetServiceImplTest {
 	public void setUp() throws Exception {
 		studySetList = new ArrayList<StudySet>();
 		
-		StudySet studySet1 = new StudySet();
-		StudySet studySet2 = new StudySet();
-		StudySet studySet3 = new StudySet();
-		StudySet studySet4 = new StudySet();
+		StudySet studySet1 = new StudySet("1");
+		StudySet studySet2 = new StudySet("2");
+		StudySet studySet3 = new StudySet("3");
+		StudySet studySet4 = new StudySet("4");
 		
 		studySetList.add(studySet1);
 		studySetList.add(studySet2);
@@ -61,7 +61,7 @@ public class StudySetServiceImplTest {
 
 	@Test
 	public void createstudySetTest() {
-		StudySet teststudySet = studySetService.createStudySet();
+		StudySet teststudySet = studySetService.createStudySet("test");
 		assertEquals("Should create studySet object", 4, teststudySet.getStudySetId());
 		verify(customCache).addToCache(teststudySet);
 	}

@@ -1,8 +1,6 @@
 package FlashCard.service;
 
 import java.util.List;
-
-import FlashCard.pojos.Instructor;
 import FlashCard.pojos.Student;
 
 public class StudentServiceImpl implements StudentService {

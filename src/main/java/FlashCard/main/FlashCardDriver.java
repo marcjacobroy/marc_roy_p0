@@ -27,16 +27,16 @@ public class FlashCardDriver {
 
 	public static void main(String args[]) {
 		log.info("Program has started");
-	
+		
 		String userInput;
-	
+		
 		do {
 			System.out.println("Welcome to FlashCard! Please choose one of the following options:");
 			System.out.println("[1] Register as new user");
 			System.out.println("[2] Log in");
 			System.out.println("[3] View all registered students");
 			System.out.println("[4] View all registered instructors");
-			System.out.println("[0] exit");
+			System.out.println("[0] Exit");
 			
 			userInput = scan.nextLine();
 			
@@ -60,6 +60,8 @@ public class FlashCardDriver {
 					} else if (instructorsCache.containsInstructorWithId(userId)){
 						InstructorDriver instructorDriver = new InstructorDriver(instructorsCache.getInstructorWithId(userId));
 						instructorDriver.instructorActions();
+					} else {
+						System.out.println("Something went wrong when trying to access your data. We're sorry.");
 					}
 				} else {
 					System.out.println("Login failed.");
@@ -77,7 +79,7 @@ public class FlashCardDriver {
 				System.out.println("Auf Wiedersehen");
 				break;
 			default:
-				System.out.println("Invalid choice. Please select either '1', '2' or '0'.");
+				System.out.println("Invalid choice. Please select a number 0-4.");
 				break;
 			}
 	
