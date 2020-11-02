@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 
+// Implementation of cache used for storing different objects 
 public class CustomCacheServiceSimpleInMemory <T> implements CustomCacheService<T> {
 	
 	private Set<T> cache = new HashSet<T>();

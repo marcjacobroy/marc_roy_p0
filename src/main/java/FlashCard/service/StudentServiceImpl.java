@@ -3,6 +3,7 @@ package FlashCard.service;
 import java.util.List;
 import FlashCard.pojos.Student;
 
+// implementation of cache used for storing students 
 public class StudentServiceImpl implements StudentService {
 
 	private CustomCacheService<Student> studentCache = new CustomCacheServiceSimpleInMemory<Student>();

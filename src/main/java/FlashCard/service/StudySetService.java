@@ -4,7 +4,7 @@ import java.util.List;
 
 import FlashCard.pojos.StudySet;
 
-
+// structure for cache used for storing study sets 
 public interface StudySetService {
 	
 	public StudySet createStudySet(String studySetName);

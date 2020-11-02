@@ -3,6 +3,7 @@ package FlashCard.service;
 import java.util.List;
 import java.util.function.Predicate;
 
+// Structure of cache used for storing different objects 
 public interface CustomCacheService <T> {
 
 	public void addToCache(T obj);

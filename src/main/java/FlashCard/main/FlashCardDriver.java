@@ -1,6 +1,7 @@
 package FlashCard.main;
 
 import java.util.Scanner;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,7 +13,9 @@ import FlashCard.service.InstructorServiceImpl;
 import FlashCard.service.CourseServiceImpl;
 import FlashCard.service.StudySetServiceImpl;
 
+// Main user entry point for application
 public class FlashCardDriver {
+	
 	private static Logger log = Logger.getRootLogger();
 
 	private static Scanner scan = new Scanner(System.in);
@@ -24,8 +27,10 @@ public class FlashCardDriver {
 	public static CourseServiceImpl coursesCache = new CourseServiceImpl();
 	
 	public static StudySetServiceImpl studySetsCache = new StudySetServiceImpl();
-
+	
+	// Main menu to select action
 	public static void main(String args[]) {
+		
 		log.info("Program has started");
 		
 		String userInput;

@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import FlashCard.pojos.User;
 import FlashCard.pojos.User.UserType;
 
+// Handles log in requests from main driver 
 public class UserLoginDriver {
 	
 	private static Logger log = Logger.getRootLogger();
@@ -35,7 +36,9 @@ public class UserLoginDriver {
 		}
 	}
 	
+	// Helper function to retrieve user type of user attempting login
 	private static UserType getUserType(){
+		
 		log.info("Getting user type for login.");
 		String userInputUserType;
 		User.UserType userType = null; 
@@ -66,7 +69,10 @@ public class UserLoginDriver {
 		
 		return userType;
 	}
+	
+	// Retrieve username of user attempting login 
 	private static String getName(UserType userType) {
+		
 		log.info("Getting username for login.");
 		String userName;
 		boolean nameExists = false;

@@ -10,7 +10,9 @@ import FlashCard.pojos.Student;
 import FlashCard.pojos.Course;
 import FlashCard.pojos.StudySet;
 
+// Possible actions once logged in as student
 public class StudentDriver {
+	
 	private static Logger log = Logger.getRootLogger();
 
 	private static Scanner scan = new Scanner(System.in);
@@ -21,7 +23,8 @@ public class StudentDriver {
 		super();
 		this.student = student;
 	}
-
+	
+	// Student action panel 
 	public void studentActions() {
 		log.info("Selecting student action.");
 		String userInput; 
@@ -52,7 +55,9 @@ public class StudentDriver {
 		
 	}
 	
+	// View all of current student's courses
 	private void viewAllCourses() {
+		
 		log.info("Student attempting to view courses.");
 		List<Course> courses = this.student.getCourses();
 		System.out.println("Enrolled courses:");
@@ -61,7 +66,9 @@ public class StudentDriver {
 		}
 	}
 	
+	// Helper function for selecting a course to view
 	private Course getCourse() {
+		
 		int courseId = -1; 
 		Course course = null;
 		boolean isEnrolled = false;
@@ -96,7 +103,9 @@ public class StudentDriver {
 		return course;
 	}
 	
+	// Allow student to interact with a specific course 
 	private void viewCourse() {
+		
 		log.info("Student attemping to view a course");
 		Course course = getCourse();
 		String userInput; 
@@ -128,6 +137,7 @@ public class StudentDriver {
 		}
 	}
 	
+	// View all study sets in a specified course of the current student 
 	private void viewAllStudySets(Course course){
 		List<StudySet> studySets = course.getStudySets();
 		System.out.println("Study sets:");
@@ -136,6 +146,7 @@ public class StudentDriver {
 		}
 	}
 	
+	// Helper function to select specific study set to view from a specific course of the current student
 	private StudySet getStudySet(Course course) {
 		int studySetId = -1;
 		StudySet studySet = null;
@@ -168,6 +179,7 @@ public class StudentDriver {
 		return studySet;
 	}
 	
+	// View a specific study set of a specific course for the current student
 	private void viewStudySet(Course course) {
 		log.info("Attemping to view a studySet");
 		StudySet studySet = getStudySet(course);

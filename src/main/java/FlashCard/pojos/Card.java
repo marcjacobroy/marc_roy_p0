@@ -1,6 +1,8 @@
 package FlashCard.pojos;
 
+// A study card 
 public class Card {
+	
 	private static int cardCount; 
 	
 	private int cardId;
@@ -38,8 +40,6 @@ public class Card {
 		this.term = term;
 		this.def = def;
 	}
-	
-	
 	
 	public Entry getTerm() {
 		return term;

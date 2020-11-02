@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+// Test the update percentage method of Card 
 public class CardTest {
 
 	@BeforeClass

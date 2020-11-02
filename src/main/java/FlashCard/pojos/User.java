@@ -2,6 +2,8 @@ package FlashCard.pojos;
 
 import java.util.List; 
 import java.util.ArrayList;
+
+// A user, either a student or an instructor 
 public class User {
 	
 	public enum UserType{

@@ -5,6 +5,7 @@ import java.util.List;
 import FlashCard.pojos.Course;
 import FlashCard.pojos.Instructor;
 
+// Implementation of cache for courses 
 public class CourseServiceImpl implements CourseService {
 
 	private CustomCacheService<Course> courseCache = new CustomCacheServiceSimpleInMemory<Course>();

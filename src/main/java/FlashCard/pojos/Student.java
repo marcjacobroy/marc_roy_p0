@@ -2,6 +2,7 @@ package FlashCard.pojos;
 
 import java.util.List;
 
+// A student (type of user) 
 public class Student extends User {
 
 	public Student(String userName) {

@@ -7,7 +7,9 @@ import org.apache.log4j.Logger;
 import FlashCard.pojos.StudySet;
 import FlashCard.pojos.Card;
 
+// Main studying application 
 public class StudyDriver {
+	
 		private static Logger log = Logger.getRootLogger();
 
 		private static Scanner scan = new Scanner(System.in);
@@ -19,6 +21,7 @@ public class StudyDriver {
 			this.studySet = studySet;
 		}
 		
+		// Choose next card to be studied 
 		public Card chooseNextCard() {
 			return this.studySet.getCards().poll();
 		}

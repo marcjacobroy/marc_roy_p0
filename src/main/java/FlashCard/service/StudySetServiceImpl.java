@@ -4,6 +4,7 @@ import java.util.List;
 
 import FlashCard.pojos.StudySet;
 
+// implementation of cache used for storing study sets
 public class StudySetServiceImpl implements StudySetService {
 
 	private CustomCacheService<StudySet> studySetCache = new CustomCacheServiceSimpleInMemory<StudySet>();

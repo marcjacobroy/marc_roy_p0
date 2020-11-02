@@ -1,5 +1,6 @@
 package FlashCard.pojos;
 
+// An instructor (type of user) 
 import java.util.List;
 
 

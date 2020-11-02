@@ -5,6 +5,7 @@ import java.util.List;
 import FlashCard.pojos.Course;
 import FlashCard.pojos.Instructor;
 
+//Structure of cache for courses 
 public interface CourseService {
 	
 	public Course createCourse(String courseName, Instructor instructor);

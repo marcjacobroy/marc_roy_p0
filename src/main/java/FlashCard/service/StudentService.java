@@ -3,6 +3,7 @@ package FlashCard.service;
 import java.util.List;
 import FlashCard.pojos.Student;
 
+// structure of cache used for storing students 
 public interface StudentService {
 	public Student createStudent(String userName);
 	

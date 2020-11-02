@@ -2,7 +2,7 @@ package FlashCard.service;
 
 import java.util.List;
 import FlashCard.pojos.Instructor;
-
+// Structure of cache used for storing instructors 
 public interface InstructorService {
 	public Instructor createInstructor(String userName);
 	

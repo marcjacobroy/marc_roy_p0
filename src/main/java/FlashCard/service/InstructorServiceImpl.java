@@ -2,7 +2,7 @@ package FlashCard.service;
 
 import java.util.List;
 import FlashCard.pojos.Instructor;
-
+// implementation of cache storing instructors 
 public class InstructorServiceImpl implements InstructorService {
 	
 	private CustomCacheService<Instructor> instructorCache = new CustomCacheServiceSimpleInMemory<Instructor>();

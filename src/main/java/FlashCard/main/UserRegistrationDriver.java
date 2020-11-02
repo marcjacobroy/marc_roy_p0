@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 
 import FlashCard.pojos.User;
 
+// Handles registration requests from users 
 public class UserRegistrationDriver {
 	
 	private static Logger log = Logger.getRootLogger();
@@ -25,7 +26,9 @@ public class UserRegistrationDriver {
 		return addUser(userType, userName);
 	}
 	
+	// Helper function to retrieve usertype from user attempting registration 
 	private static User.UserType getUserType(){
+		
 		log.info("Requesting user type for registration.");
 		String userInputUserType;
 		User.UserType userType = null; 
@@ -55,6 +58,8 @@ public class UserRegistrationDriver {
 		
 		return userType;
 	}
+	
+	// Helper function to retrieve desired username from user attempting registration
 	private static String getName() {
 		log.info("Requesting username for registration.");
 		String userName;
@@ -76,6 +81,7 @@ public class UserRegistrationDriver {
 		return userName;
 	}
 	
+	// Add the user to the appropriate cache in storage 
 	private static boolean addUser(User.UserType userType, String userName) {
 		log.info("Adding user info to cache.");
 		if (userType == (User.UserType.STUDENT)){

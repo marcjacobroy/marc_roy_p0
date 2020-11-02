@@ -15,6 +15,8 @@ import FlashCard.pojos.StudySet;
 import FlashCard.pojos.Entry;
 import FlashCard.pojos.Entry.Language;
 
+// Possible actions once logged in as instructor.
+
 public class InstructorDriver {
 	
 	private static Logger log = Logger.getRootLogger();
@@ -28,11 +30,11 @@ public class InstructorDriver {
 		this.instructor = instructor;
 	}
 	
+	// Instructor options
 	public void instructorActions() {
 		log.info("Selecting an instructor action.");
 		String userInput;
 		do {
-
 			System.out.println("What would you like to do?");
 			System.out.println("[1] Create a course.");
 			System.out.println("[2] Create a study set.");
@@ -43,7 +45,6 @@ public class InstructorDriver {
 			userInput = scan.nextLine();
 			
 			switch (userInput) {
-			
 			case "1":
 				if (createCourse()) {
 					System.out.println("Successfully created course!");
@@ -86,7 +87,9 @@ public class InstructorDriver {
 		
 	}
 	
+	// Allow current instructor to create a course with specified name. 
 	private boolean createCourse() {
+		
 		log.info("Instructor would like to create course.");
 		String courseName;
 		
@@ -103,7 +106,9 @@ public class InstructorDriver {
 		return true;
 	}
 	
+	// Choose language for set created by this instructor.
 	private static Language pickLanguage() {
+		
 		log.info("Instructor is choosing a language");
 		String userInputLanguage;
 		do {
@@ -144,6 +149,7 @@ public class InstructorDriver {
 	return null;
 	}
 	
+	// This instructor creates a study set
 	private boolean createStudySet(){
 		
 		log.info("Instructor would like to create study set.");
@@ -193,7 +199,9 @@ public class InstructorDriver {
 		
 	}
 	
+	// Helper function allows instructor to create card to later be added to set. 
 	private Card createCard(Language termLanguage, Language defLanguage) {
+		
 		log.info("Instructor is creating card.");
 		System.out.println("Please enter term:");
 		String termText = scan.nextLine();
@@ -205,7 +213,9 @@ public class InstructorDriver {
 		return card;
 	}
 	
+	// Helper function allows instructor to specify course for assigning a study set or student. 
 	private Course getCourse() {
+		
 		log.info("Instructor is choosing course.");
 		boolean validCourse = false;
 		Course course = null;
@@ -235,7 +245,9 @@ public class InstructorDriver {
 		return course;
 	}
 	
+	// Helper function allows instructor to select study set for assigning to a course. 
 	private StudySet getStudySet() {
+		
 			StudySet studySet = null;
 			boolean foundSet = false;
 			int studySetId = -1;
@@ -261,7 +273,9 @@ public class InstructorDriver {
 			return studySet;
 	}
 	
+	// Helper function allows instructor to select student for assinging to course. 
 	private Student getStudent() {
+		
 		Student student = null;
 		boolean foundStudent = false;
 		int studentId = -1;
@@ -288,6 +302,7 @@ public class InstructorDriver {
 	}
 
 	private boolean assignStudySetToCourse() {
+		
 		Course course = getCourse();
 		StudySet studySet = getStudySet();
 		course.addStudySet(studySet);
@@ -295,6 +310,7 @@ public class InstructorDriver {
 	}
 	
 	private boolean assignStudentToCourse() {
+		
 		Course course = getCourse();
 		Student student = getStudent();
 		student.addCourse(course);

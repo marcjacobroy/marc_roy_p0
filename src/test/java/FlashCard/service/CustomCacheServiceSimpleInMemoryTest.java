@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import FlashCard.pojos.Student;
 
+// Test methods of cache 
 public class CustomCacheServiceSimpleInMemoryTest {
 	
 	private CustomCacheServiceSimpleInMemory<Student> cacheService;

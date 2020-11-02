@@ -1,5 +1,6 @@
 package FlashCard.pojos;
 
+// An entry on a card in a study set 
 public class Entry {
 	
 	public enum Language {
