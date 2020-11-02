@@ -2,12 +2,21 @@ package FlashCard.service;
 
 import java.util.List;
 
+import FlashCard.pojos.Instructor;
 import FlashCard.pojos.Student;
 
 public class StudentServiceImpl implements StudentService {
 
 	private CustomCacheService<Student> studentCache = new CustomCacheServiceSimpleInMemory<Student>();
 	
+	
+	public StudentServiceImpl() {
+		super();
+	}
+	public StudentServiceImpl(CustomCacheService<Student> studentCache) {
+		this();
+		this.studentCache = studentCache;
+	}
 	@Override
 	public Student createStudent(String userName) {
 		Student student = new Student(userName);

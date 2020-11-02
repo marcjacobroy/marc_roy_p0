@@ -7,6 +7,15 @@ import FlashCard.pojos.StudySet;
 public class StudySetServiceImpl implements StudySetService {
 
 	private CustomCacheService<StudySet> studySetCache = new CustomCacheServiceSimpleInMemory<StudySet>();
+	
+	public StudySetServiceImpl() {
+		super();
+	}
+
+	public StudySetServiceImpl(CustomCacheService<StudySet> studySetCache) {
+		this();
+		this.studySetCache = studySetCache;
+	}
 
 	@Override
 	public StudySet createStudySet() {

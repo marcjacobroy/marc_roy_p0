@@ -8,8 +8,6 @@ public interface InstructorService {
 	
 	public List<Instructor> getAllInstructors();
 	
-	public boolean containsInstructor (Instructor instructor);
-	
 	public boolean containsInstructorWithId(int id);
 	
 	public boolean containsInstructorWithName(String userName);

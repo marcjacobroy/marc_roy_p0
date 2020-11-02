@@ -7,6 +7,13 @@ public class InstructorServiceImpl implements InstructorService {
 	
 	private CustomCacheService<Instructor> instructorCache = new CustomCacheServiceSimpleInMemory<Instructor>();
 	
+	public InstructorServiceImpl() {
+		super();
+	}
+	public InstructorServiceImpl(CustomCacheService<Instructor> instructorCache) {
+		this();
+		this.instructorCache = instructorCache;
+	}
 	@Override
 	public Instructor createInstructor(String userName) {
 		Instructor instructor = new Instructor(userName);
@@ -17,11 +24,6 @@ public class InstructorServiceImpl implements InstructorService {
 	@Override
 	public List<Instructor> getAllInstructors() {
 		return instructorCache.retrieveAllItems();
-	}
-	
-	@Override
-	public boolean containsInstructor(Instructor instructor) {
-		return instructorCache.contains(instructor);
 	}
 
 	@Override

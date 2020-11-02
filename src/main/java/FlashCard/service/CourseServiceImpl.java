@@ -9,6 +9,15 @@ public class CourseServiceImpl implements CourseService {
 
 	private CustomCacheService<Course> courseCache = new CustomCacheServiceSimpleInMemory<Course>();
 	
+	public CourseServiceImpl() {
+		super();
+	}
+
+	public CourseServiceImpl(CustomCacheService<Course> courseCache) {
+		this();
+		this.courseCache = courseCache;
+	}
+
 	@Override
 	public Course createCourse(String courseName, Instructor instructor) {
 		Course course = new Course(courseName, instructor);
