@@ -6,3 +6,131 @@ Starting user registration.
 Requesting user type for registration.
 Requesting username for registration.
 Adding user info to cache.
+Program has started
+Starting user login.
+Getting user type for login.
+Getting username for login.
+Starting user registration.
+Requesting user type for registration.
+Requesting username for registration.
+Adding user info to cache.
+Starting user login.
+Getting user type for login.
+Getting username for login.
+Selecting student action.
+Student attempting to view courses.
+Student attemping to view a course
+Encountered IllegalArgumentException
+Encountered InputMismatchException
+Encountered IllegalArgumentException
+Student is leaving.
+Starting user registration.
+Requesting user type for registration.
+Requesting username for registration.
+Adding user info to cache.
+Starting user login.
+Getting user type for login.
+Getting username for login.
+Selecting an instructor action.
+Instructor would like to create course.
+Created course.
+Instructor would like to create study set.
+Instructor is choosing a language
+Instructor is choosing a language
+Instructor is creating card.
+Instructor is creating card.
+Instructor is creating card.
+Instructor is choosing course.
+Instructor is choosing course.
+Instructor is leaving.
+Starting user login.
+Getting user type for login.
+Getting username for login.
+Selecting student action.
+Student attempting to view courses.
+Student attemping to view a course
+Attemping to view a studySet
+Began studying.
+Student is leaving.
+Starting user registration.
+Requesting user type for registration.
+Requesting username for registration.
+Starting user registration.
+Requesting user type for registration.
+Requesting username for registration.
+Program has started
+Starting user registration.
+Requesting user type for registration.
+Requesting username for registration.
+Adding user info to cache.
+Starting user login.
+Getting user type for login.
+Getting username for login.
+Selecting an instructor action.
+Instructor would like to create study set.
+Instructor is choosing a language
+Instructor is choosing a language
+Instructor is creating card.
+Instructor is creating card.
+Instructor is creating card.
+Instructor would like to create study set.
+Instructor is choosing a language
+Instructor is choosing a language
+Instructor is creating card.
+Instructor is leaving.
+Program has started
+Starting user registration.
+Requesting user type for registration.
+Requesting username for registration.
+Adding user info to cache.
+Starting user login.
+Getting user type for login.
+Getting username for login.
+Selecting an instructor action.
+Instructor is leaving.
+Starting user login.
+Getting user type for login.
+Getting username for login.
+Starting user login.
+Getting user type for login.
+Getting username for login.
+Starting user login.
+Getting user type for login.
+Getting username for login.
+Selecting an instructor action.
+Instructor would like to create course.
+Created course.
+Instructor would like to create study set.
+Instructor is choosing a language
+Instructor is choosing a language
+Instructor is creating card.
+Instructor is creating card.
+Instructor is creating card.
+Instructor would like to create study set.
+Instructor is choosing a language
+Instructor is choosing a language
+Instructor is creating card.
+Instructor is choosing course.
+Instructor is leaving.
+Starting user registration.
+Requesting user type for registration.
+Requesting username for registration.
+Adding user info to cache.
+Starting user login.
+Getting user type for login.
+Getting username for login.
+Selecting an instructor action.
+Instructor is choosing course.
+Instructor is choosing course.
+Encountered IllegalArgumentException
+Instructor is leaving.
+Starting user login.
+Getting user type for login.
+Getting username for login.
+Selecting student action.
+Student attempting to view courses.
+Student attemping to view a course
+Attemping to view a studySet
+Began studying.
+Attemping to view a studySet
+Student is leaving.
