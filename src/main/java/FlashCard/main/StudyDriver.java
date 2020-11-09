@@ -32,7 +32,7 @@ public class StudyDriver {
 			
 			do {
 				Card card = chooseNextCard();
-				System.out.println("What is the definition of " + card.getTerm().getText() +"?");
+				System.out.println("What is the definition of " + card.getTerm() +"?");
 				String userInput;
 				
 				do {
@@ -40,7 +40,7 @@ public class StudyDriver {
 					userInput = scan.nextLine();
 				} while(!"1".equals(userInput));
 				
-				System.out.println(card.getDef().getText());
+				System.out.println(card.getDef());
 				
 				userInput = null;
 				do {

@@ -3,6 +3,14 @@ package FlashCard.pojos;
 // A study card 
 public class Card {
 	
+	public int getCardId() {
+		return cardId;
+	}
+
+	public static int getCardCount() {
+		return cardCount;
+	}
+
 	private static int cardCount; 
 	
 	private int cardId;
@@ -13,10 +21,28 @@ public class Card {
 	
 	private double percentage;
 	
-	private int count = 1;
+	private int countCorrect = 0;
+	
+	private int countWrong = 0;
 	
 	public double getPercentage() {
-		return percentage;
+		return ((double) this.countCorrect) / ((double) this.countCorrect + (double) this.countWrong);
+	}
+
+	public int getCountCorrect() {
+		return countCorrect;
+	}
+
+	public void setCountCorrect(int countCorrect) {
+		this.countCorrect = countCorrect;
+	}
+
+	public int getCountWrong() {
+		return countWrong;
+	}
+
+	public void setCountWrong(int countWrong) {
+		this.countWrong = countWrong;
 	}
 
 	public void setPercentage(double percentage) {
@@ -25,11 +51,10 @@ public class Card {
 	
 	public void updatePercentage(boolean correct) {
 		if (correct) {
-			this.percentage = ((this.percentage * count) + 1.) / (count + 1.);
+			this.countCorrect++;
 		} else {
-			this.percentage = this.percentage * count / (count + 1.);
+			this.countWrong++;
 		}
-		this.count += 1;
 	}
 
 	public Card(Entry term, Entry def) {
@@ -41,16 +66,16 @@ public class Card {
 		this.def = def;
 	}
 	
-	public Entry getTerm() {
-		return term;
+	public String getTerm() {
+		return this.term.getText();
 	}
 
 	public void setTerm(Entry term) {
 		this.term = term;
 	}
 
-	public Entry getDef() {
-		return def;
+	public String getDef() {
+		return this.def.getText();
 	}
 
 	public void setDef(Entry def) {
