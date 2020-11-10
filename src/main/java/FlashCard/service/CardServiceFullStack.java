@@ -17,12 +17,6 @@ public class CardServiceFullStack implements CardService {
 	}
 
 	@Override
-	public List<Card> getAllCards() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<Card> getAllCardsByStudySetId(int studySetId) {
 		// TODO Auto-generated method stub
 		return null;

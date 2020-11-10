@@ -2,13 +2,15 @@ package FlashCard.Dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -24,6 +26,7 @@ import FlashCard.pojos.Card;
 import FlashCard.pojos.Entry;
 import FlashCard.util.ConnectionUtil;
 
+// Credits to Conner Bosch for teaching us how to use Mockito with prepared statements
 @RunWith(MockitoJUnitRunner.class)
 public class CardDaoPostgresTest {
 
@@ -35,9 +38,10 @@ public class CardDaoPostgresTest {
 	@Mock
 	private Connection connection;
 	
-	private Statement stmt;
+	private PreparedStatement stmt;
+	private PreparedStatement spy;
 	
-	private Statement spy;
+	private PreparedStatement utilStmt;
 	
 	private Connection realConnection;
 	
@@ -54,44 +58,56 @@ public class CardDaoPostgresTest {
 		
 		realConnection = new ConnectionUtil().createConnection();
 		
+		//set up Dao to use the mocked object
+		cardDao.setConnUtil(connUtil);
+		
+		utilStmt = realConnection.prepareStatement("insert into \"Card\" (count_correct, count_wrong, term, def, study_set_id) values(?, ?, ?, ?, ?)");
+		
+		utilStmt.setInt(1, 0);
+		utilStmt.setInt(2, 0);
+		utilStmt.setString(3, "test");
+		utilStmt.setString(4, "pass");
+		utilStmt.setInt(5, 1);
+		
+		utilStmt.executeUpdate();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+
+		utilStmt = realConnection.prepareStatement("delete from \"Card\" where term = ? AND def = ?");
+		utilStmt.setString(1, "test0");
+		utilStmt.setString(2, "pass0");
+		utilStmt.executeUpdate();
+		
+		utilStmt = realConnection.prepareStatement("delete from \"Card\" where term = ? AND def = ?");
+		utilStmt.setString(1, "test");
+		utilStmt.setString(2, "pass");
+		utilStmt.executeUpdate();
+		
+		if(stmt != null) {
+			stmt.close();
+		}
+		
+		realConnection.close();
+		
+	}
+	
+	// Credits to Conner Bosch for this helper function especially 
+	
+	private void initStmtHelper(String sql) throws SQLException{
+		
 		//creating a real stmt from a connection
-		stmt = realConnection.createStatement(); 
+		stmt = realConnection.prepareStatement(sql);
 		
 		//spying on that real stmt
 		spy = Mockito.spy(stmt);
 		
 		//mock our connection and util, so we will only use the stmt we are spying on
-		when(connection.createStatement()).thenReturn(spy);
 		when(connUtil.createConnection()).thenReturn(connection);
-		
-		//set up Dao to use the mocked object
-		cardDao.setConnUtil(connUtil);
-		
-		stmt.executeUpdate("insert into \"Card\" (count_correct, count_wrong, term, def, study_set_id) "
-				+ "values("
-				+ 0
-				+ ", "
-				+ 0
-				+ ", '"
-				+ "test"
-				+ "', '"
-				+ "pass"
-				+ "', "
-				+ 1
-				+ ")");
+		when(connection.prepareStatement(sql)).thenReturn(spy);
 	}
-
-	@After
-	public void tearDown() throws Exception {
-		
-		stmt.executeUpdate("delete from \"Card\" where term = 'test0' AND def = 'pass0'");
-		stmt.executeUpdate("delete from \"Card\" where term = 'test' AND def = 'pass'");
-		
-		
-		realConnection.close();
-		
-	}
-
+	
 	@Test
 	public void createCardTest() throws SQLException {
 		
@@ -101,29 +117,25 @@ public class CardDaoPostgresTest {
 		
 		Card card = new Card(term, def);
 		
-		cardDao.createCard(card);
-		
-		String sql = "insert into \"Card\" (count_correct, count_wrong, term, def, study_set_id) "
-				+ "values("
-				+ card.getCountCorrect()
-				+ ", "
-				+ card.getCountWrong()
-				+ ", '"
-				+ card.getTerm()
-				+ "', '"
-				+ card.getDef()
-				+ "', "
-				+ 1
-				+ ")";
-		
-		verify(spy).executeUpdate(sql);
-		
-		ResultSet rs = stmt.executeQuery("select * from \"Card\" where term = 'test0' AND def = 'pass0'");
-		
-		assertTrue(rs.next());
-		
+		try {
+			 String sql = "insert into \"Card\" (count_correct, count_wrong, term, def, study_set_id) values( ?, ?, ?, ?, ?)";
+			 initStmtHelper(sql);
+		} catch(SQLException e) {
+			fail("SQL exception thrown: " + e);
+		}
+		try {
+			cardDao.createCard(card);
+			verify(spy).setInt(1, card.getCountCorrect());
+			verify(spy).setInt(2, card.getCountWrong());
+			verify(spy).setString(3, card.getTerm());
+			verify(spy).setString(4, card.getDef());
+			verify(spy).setInt(5, 1);
+			verify(spy).executeUpdate();
+		} catch(SQLException e) {
+			fail("SQL exception thrown: " + e);
+		}
 	}
-	
+
 	@Test
 	public void updateCardTest() throws SQLException {
 		
@@ -133,59 +145,91 @@ public class CardDaoPostgresTest {
 		
 		Card card = new Card(term, def);
 		
-		ResultSet rsId = stmt.executeQuery("select card_id from \"Card\" where term = 'test' and def = 'pass'");
+		try {
+			String sql = "update \"Card\" set term = ?, def = ?, count_correct = ?, count_wrong = ? where card_id = ?";
+			initStmtHelper(sql);
+		} catch(SQLException e) {
+			fail("SQL exception thrown: " + e);
+		}
 		
-		rsId.next();
+		utilStmt = realConnection.prepareStatement("select card_id from \"Card\" where term = ? and def = ?");
+		utilStmt.setString(1, "test");
+		utilStmt.setString(2, "pass");
 		
-		int cardId = rsId.getInt("card_id");
+		ResultSet rsCardId = utilStmt.executeQuery();
+		rsCardId.next();
+		
+		int cardId = rsCardId.getInt("card_id");
 		
 		cardDao.updateCard(cardId, card);
 		
-		String sql = "update \"Card\" set term = 'test0', def = 'pass0', count_correct = 0, count_wrong = 0 where card_id = " + Integer.toString(cardId) + ";";
 		
-		verify(spy).executeUpdate(sql);
+		verify(spy).setString(1, card.getTerm());
+		verify(spy).setString(2, card.getDef());
+		verify(spy).setInt(3, card.getCountCorrect());
+		verify(spy).setInt(4, card.getCountWrong());
+		verify(spy).setInt(5, cardId);
+		verify(spy).executeUpdate();
 		
-		ResultSet rs = stmt.executeQuery("select * from \"Card\" where term = 'test0' and def = 'pass0'");
+		utilStmt = realConnection.prepareStatement("select * from \"Card\" where term = ? and def = ?");
+		utilStmt.setString(1, "test0");
+		utilStmt.setString(2, "pass0");
+		ResultSet rs = utilStmt.executeQuery();
 		
 		assertTrue(rs.next());
-		
 	}
+	
 	
 	@Test
 	public void readCardDefTest() throws SQLException {
-		//TODO
 		
 		String expectedDef = "pass";
+		try {
+			String sql = "select def from \"Card\" where card_id = ?";
+			initStmtHelper(sql);
+		} catch(SQLException e) {
+			fail("SQLException " + e);
+		}
 		
-		ResultSet rsCardIdDef = stmt.executeQuery("select card_id from \"Card\" where term = 'test' and def = 'pass'");
+		utilStmt = realConnection.prepareStatement("select card_id from \"Card\" where term = ?");
+		utilStmt.setString(1, "test");
 		
-		rsCardIdDef.next();
+		ResultSet rsCardId = utilStmt.executeQuery();
+		rsCardId.next();
 		
-		int cardId = rsCardIdDef.getInt("card_id");
+		int cardId = rsCardId.getInt("card_id");
+
 		
 		String actualDef = cardDao.readCardDef(cardId);
-		
 		assertEquals(expectedDef, actualDef);
-		
 	}
 	
 	@Test
 	public void readCardTermTest() throws SQLException {
 		
 		String expectedTerm = "test";
+		try {
+			String sql = "select term from \"Card\" where card_id = ?";
+			initStmtHelper(sql);
+		} catch(SQLException e) {
+			fail("SQLException " + e);
+		}
 		
-		ResultSet rsCardIdTerm = stmt.executeQuery("select card_id from \"Card\" where term = 'test' and def = 'pass'");
+		utilStmt = realConnection.prepareStatement("select card_id from \"Card\" where term = ?");
+		utilStmt.setString(1, "test");
 		
-		rsCardIdTerm.next();
+		ResultSet rsCardId = utilStmt.executeQuery();
+		rsCardId.next();
 		
-		int cardId = rsCardIdTerm.getInt("card_id");
+		int cardId = rsCardId.getInt("card_id");
+
 		
 		String actualTerm = cardDao.readCardTerm(cardId);
-		
 		assertEquals(expectedTerm, actualTerm);
 	}
-	
-	@Test 
+
+
+	@Test
 	public void deleteCardTest() throws SQLException {
 		
 		Entry term = new Entry("test");
@@ -194,10 +238,25 @@ public class CardDaoPostgresTest {
 		
 		Card card = new Card(term, def);
 		
+		try {
+			String sql = "delete from \"Card\" where term = ? and def = ?";
+			initStmtHelper(sql);
+		} catch(SQLException e) {
+			fail("SQL exception thrown: " + e);
+		}
+		
 		cardDao.deleteCard(card);
 		
-		ResultSet rs = stmt.executeQuery("select card_id from \"Card\" where term = 'test' and def = 'pass'");
 		
-		assert(!rs.next());
+		verify(spy).setString(1, card.getTerm());
+		verify(spy).setString(2, card.getDef());
+		verify(spy).executeUpdate();
+		
+		utilStmt = realConnection.prepareStatement("select * from \"Card\" where term = ? and def = ?");
+		utilStmt.setString(1, "test");
+		utilStmt.setString(2, "pass");
+		ResultSet rs = utilStmt.executeQuery();
+		
+		assertFalse(rs.next());
 	}
 }

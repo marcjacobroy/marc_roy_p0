@@ -7,9 +7,9 @@ public class ConnectionUtil {
 	
 	public Connection createConnection() throws SQLException {
 		
-		Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?", "postgres", "Pr1648%%");
+		Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres?", "postgres", "Pr1648%%");
 		
-		return conn;
+		return connection;
 		
 	}
 }
