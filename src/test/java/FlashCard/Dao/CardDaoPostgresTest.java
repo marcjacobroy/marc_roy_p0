@@ -32,6 +32,8 @@ public class CardDaoPostgresTest {
 
 	public CardDaoPostgres cardDao = new CardDaoPostgres();
 	
+	private static final int DUMMY_SET_ID = 2;
+	
 	@Mock
 	private ConnectionUtil connUtil;
 	
@@ -67,7 +69,7 @@ public class CardDaoPostgresTest {
 		utilStmt.setInt(2, 0);
 		utilStmt.setString(3, "test");
 		utilStmt.setString(4, "pass");
-		utilStmt.setInt(5, 1);
+		utilStmt.setInt(5, DUMMY_SET_ID);
 		
 		utilStmt.executeUpdate();
 	}

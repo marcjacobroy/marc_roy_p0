@@ -4,7 +4,6 @@ import FlashCard.pojos.Card;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -14,10 +13,9 @@ import FlashCard.util.ConnectionUtil;
 
 public class CardDaoPostgres implements CardDao {
 	
-	private static final int DEFAULT_STUDYSET = 1;
+	private static final int DEFAULT_STUDYSET = 2;
 	
 	private PreparedStatement stmt; 
-	private Statement statement;
 	
 	private ConnectionUtil connUtil;
 	
