@@ -90,6 +90,14 @@ public class StudySetDaoPostgresTest {
 		utilStmt.setString(1, TEST_SET_NAME);
 		utilStmt.executeUpdate();
 		
+		utilStmt = realConnection.prepareStatement("delete from \"StudySet\" where study_set_name = ?");
+		utilStmt.setString(1, "rename test");
+		utilStmt.executeUpdate();
+		
+		utilStmt = realConnection.prepareStatement("delete from \"StudySet\" where study_set_name = ?");
+		utilStmt.setString(1, "test_study_set1");
+		utilStmt.executeUpdate();
+		
 		if(stmt != null) {
 			stmt.close();
 		}

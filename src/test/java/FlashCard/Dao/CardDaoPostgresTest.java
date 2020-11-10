@@ -131,7 +131,7 @@ public class CardDaoPostgresTest {
 			verify(spy).setInt(2, card.getCountWrong());
 			verify(spy).setString(3, card.getTerm());
 			verify(spy).setString(4, card.getDef());
-			verify(spy).setInt(5, 1);
+			verify(spy).setInt(5, DUMMY_SET_ID);
 			verify(spy).executeUpdate();
 		} catch(SQLException e) {
 			fail("SQL exception thrown: " + e);

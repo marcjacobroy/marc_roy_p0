@@ -8,7 +8,7 @@ public interface CourseDao {
 	
 	public String readCourse(int courseId);
 		
-	public void updateCourse(int courseId, Course course);
+	public void renameCourse(int courseId, String newName);
 	
-	public void deleteCourse(Course course);
+	public void deleteCourse(int courseId);
 }
