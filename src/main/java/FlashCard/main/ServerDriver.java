@@ -9,6 +9,8 @@ import FlashCard.controller.StudySetController;
 import FlashCard.controller.CourseController;
 import FlashCard.controller.UserController;
 
+// create a connection with javalin to process http requests on server with postman 
+// specify paths 
 public class ServerDriver {
 	
 	private static Logger log = Logger.getRootLogger();

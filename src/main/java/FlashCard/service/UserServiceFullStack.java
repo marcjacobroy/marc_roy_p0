@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import FlashCard.Dao.UserDao;
 import FlashCard.Dao.UserDaoPostgres;
 
+//currently, simply calls on Dao methods, intermediary between Controllers and Daos 
 public class UserServiceFullStack implements UserService {
 	
 	private static Logger log = Logger.getRootLogger();

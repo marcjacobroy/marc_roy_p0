@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import FlashCard.Dao.CourseDao;
 import FlashCard.Dao.CourseDaoPostgres;
 
+//currently, simply calls on Dao methods, intermediary between Controllers and Daos 
 public class CourseServiceFullStack implements CourseService {
 	
 	private static Logger log = Logger.getRootLogger();

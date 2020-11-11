@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 
 import FlashCard.util.ConnectionUtil;
 
+// leverage jdbc to interact with our postgresql database 
 public class CardDaoPostgres implements CardDao {
 	
 	private static Logger log = Logger.getRootLogger();
@@ -21,7 +22,8 @@ public class CardDaoPostgres implements CardDao {
 	public void setConnUtil(ConnectionUtil connUtil) {
 		this.connUtil = connUtil;
 	}
-
+	
+	// check if card with cardId exists in our database 
 	public static boolean cardExists(int cardId) {
 		
 		log.debug("Entering cardExists in CardDaoPostGres on " + cardId);
@@ -46,6 +48,7 @@ public class CardDaoPostgres implements CardDao {
 		return true;
 	}
 	
+	// retrieve the count correct value for card id 
 	public static int getCountCorrect(int cardId) {
 		
 		log.debug("Entering getCountCorrect in CardDaoPostGres on " + cardId);
@@ -71,6 +74,7 @@ public class CardDaoPostgres implements CardDao {
 		throw new IllegalArgumentException("Negative count");
 	}
 	
+	// retrieve the count wrong value for card id 
 	public static int getCountWrong(int cardId) {
 		
 		log.debug("Entering getCountWrong in CardDaoPostGres on " + cardId);
@@ -95,6 +99,8 @@ public class CardDaoPostgres implements CardDao {
 		}
 		throw new IllegalArgumentException("Negative count");
 	}
+	
+	// create card with given parameters 
 	@Override
 	public void createCard(Card card) {
 		
@@ -122,6 +128,7 @@ public class CardDaoPostgres implements CardDao {
 		
 	}
 	
+	// read def of a card with id 
 	@Override
 	public String readCardDef(int cardId){
 		
@@ -147,6 +154,7 @@ public class CardDaoPostgres implements CardDao {
 		}
 	}
 		
+	// read term of a card with id 
 	@Override
 	public String readCardTerm(int cardId){
 		
@@ -172,6 +180,7 @@ public class CardDaoPostgres implements CardDao {
 		}
 	}
 	
+	// read score of a card with id 
 	@Override
 	public double readCardScore(int cardId) {
 		
@@ -203,6 +212,7 @@ public class CardDaoPostgres implements CardDao {
 		return -1;
 	}
 
+	// update score of card by one step 
 	@Override
 	public void updateCardScore(int cardId, boolean res) {
 		
@@ -229,6 +239,7 @@ public class CardDaoPostgres implements CardDao {
 		}
 	}
 	
+	// modify def and term of card with id, also reset counts 
 	@Override
 	public void updateCardEntries(int cardId, Card card) {
 		
@@ -255,7 +266,7 @@ public class CardDaoPostgres implements CardDao {
 		}
 	}
 		
-	
+	// delete card with id 
 	@Override
 	public void deleteCard(int cardId) {
 		

@@ -22,7 +22,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import FlashCard.util.ConnectionUtil;
 import FlashCard.pojos.Course;
 
-
+//Credits to Conner Bosch for teaching us how to use Mockito with prepared statements
+//General idea is to verify that SQL statements were ran with correct parameters 
 @RunWith(MockitoJUnitRunner.class)
 public class CourseDaoPostgresTest {
 	

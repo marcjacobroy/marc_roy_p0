@@ -6,12 +6,16 @@ import FlashCard.service.CardService;
 import FlashCard.service.CardServiceFullStack;
 import io.javalin.http.Context;
 import org.apache.log4j.Logger;
+
+// Control interactions between parameters passed in by user and calls to FullStackService
 public class CardController {
 	
 	private static Logger log = Logger.getRootLogger();
 	
 	CardService cardService = new CardServiceFullStack();
 	
+	
+	// Ensure no empty strings are passed in as entries, then create card 
 	public void createCard(Context ctx) {
 		
 		log.trace("Entering createCard in CardController");
@@ -40,6 +44,7 @@ public class CardController {
 		}
 	}
 	
+	// read def of card given id 
 	public void readCardDef(Context ctx) {
 		
 		log.trace("Entering readCardDef in CardController");
@@ -53,6 +58,7 @@ public class CardController {
 		}
 	}
 	
+	// read term of card given id 
 	public void readCardTerm(Context ctx) {
 		
 		log.trace("Entering readCardTerm in CardController");
@@ -67,6 +73,7 @@ public class CardController {
 		}
 	}
 	
+	// read score of card given id 
 	public void readCardScore(Context ctx) {
 		
 		log.trace("Entering readCardScore in CardController");
@@ -81,6 +88,7 @@ public class CardController {
 		}
 	}
 	
+	// update card term and def, making sure they are not empty 
 	public void updateCardEntries(Context ctx) {
 		
 		log.trace("Entering updateCardEntries in CardController");
@@ -112,6 +120,8 @@ public class CardController {
 		
 	}
 	
+	// update one 'step' of a card score. 
+	// ie, add one more correct or one more wrong 
 	public void updateCardScore(Context ctx) {
 		
 		log.trace("Entering updateCardScore in CardController");
@@ -139,6 +149,7 @@ public class CardController {
 		
 	}
 	
+	// delete a card given id (cascading)
 	public void deleteCard(Context ctx) {
 		
 		log.trace("Entering deletCard in CardController");

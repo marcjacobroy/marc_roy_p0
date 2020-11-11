@@ -24,6 +24,8 @@ import FlashCard.pojos.User;
 import FlashCard.pojos.User.UserType;
 
 
+//Credits to Conner Bosch for teaching us how to use Mockito with prepared statements
+//General idea is to verify that SQL statements were ran with correct parameters 
 @RunWith(MockitoJUnitRunner.class)
 public class UserDaoPostgresTest {
 	

@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import FlashCard.Dao.CardDao;
 import FlashCard.Dao.CardDaoPostgres;
 
+// currently, simply calls on Dao methods, intermediary between Controllers and Daos 
 public class CardServiceFullStack implements CardService {
 	
 	private static Logger log = Logger.getRootLogger();

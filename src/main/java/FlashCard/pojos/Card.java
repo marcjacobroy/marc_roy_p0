@@ -2,14 +2,6 @@ package FlashCard.pojos;
 
 // A study card 
 public class Card {
-	
-	public int getCardId() {
-		return cardId;
-	}
-
-	public static int getCardCount() {
-		return cardCount;
-	}
 
 	private static int cardCount; 
 	
@@ -24,6 +16,15 @@ public class Card {
 	private int countCorrect = 0;
 	
 	private int countWrong = 0;
+	
+	public Card(Entry term, Entry def) {
+		super();
+		this.cardId = cardCount;
+		cardCount ++;
+		this.percentage = 0.0;
+		this.term = term;
+		this.def = def;
+	}
 	
 	public double getPercentage() {
 		return ((double) this.countCorrect) / ((double) this.countCorrect + (double) this.countWrong);
@@ -55,15 +56,6 @@ public class Card {
 		} else {
 			this.countWrong++;
 		}
-	}
-
-	public Card(Entry term, Entry def) {
-		super();
-		this.cardId = cardCount;
-		cardCount ++;
-		this.percentage = 0.0;
-		this.term = term;
-		this.def = def;
 	}
 	
 	public String getTerm() {

@@ -6,12 +6,14 @@ import FlashCard.service.StudySetServiceFullStack;
 import io.javalin.http.Context;
 import org.apache.log4j.Logger;
 
+//Control interactions between parameters passed in by user and calls to FullStackService
 public class StudySetController {
 	
 	private static Logger log = Logger.getRootLogger();
 	
 	StudySetService studySetService = new StudySetServiceFullStack();
 	
+	// Ensure no empty strings are passed in as entries, then create study set  
 	public void createStudySet(Context ctx) {
 		
 		log.trace("Entering createStudySet in StudySetController");
@@ -27,6 +29,7 @@ public class StudySetController {
 		}
 	}
 	
+	// read all cards in study set with id 
 	public void readStudySetCards(Context ctx) {
 		
 		log.trace("Entering readStudySetCards in StudySetController");
@@ -41,6 +44,7 @@ public class StudySetController {
 		}
 	}
 	
+	// read name of study set given its id 
 	public void readStudySetName(Context ctx) {
 		
 		log.trace("Entering readStudySetName in StudySetController");
@@ -55,6 +59,7 @@ public class StudySetController {
 		}
 	}
 	
+	// after checking that new name is not empty, change name of study set with id 
 	public void renameStudySet(Context ctx) {
 		
 		log.trace("Entering renameStudySet in StudySetController");
@@ -77,6 +82,7 @@ public class StudySetController {
 		}
 	}
 	
+	// delete study set with id, cascading
 	public void deleteStudySet(Context ctx) {
 		
 		log.trace("Entering deleteStudySet in StudySetController");
@@ -92,6 +98,7 @@ public class StudySetController {
 		}
 	}
 	
+	// add entry to the AssignCSS table with card_id and study_set id 
 	public void assignCardToStudySet(Context ctx) {
 		
 		log.trace("Entering assignCardToStudySet in StudySetController");
@@ -108,6 +115,7 @@ public class StudySetController {
 		}
 	}
 	
+	// retrieve the card from study set with id that has the lowest score 
 	public void getCardWithMinScoreFromStudySet(Context ctx) {
 		
 		log.trace("Entering getCardWithMinScoreFromStudySet in StudySetController");

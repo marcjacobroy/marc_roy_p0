@@ -7,12 +7,14 @@ import FlashCard.service.CourseService;
 import FlashCard.service.CourseServiceFullStack;
 import io.javalin.http.Context;
 
+//Control interactions between parameters passed in by user and calls to FullStackService
 public class CourseController {
 	
 	private static Logger log = Logger.getRootLogger();
 	
 	CourseService courseService = new CourseServiceFullStack();
 	
+	// ensure course name isn't empty, then create course 
 	public void createCourse(Context ctx) {
 		
 		log.trace("Entering createCourse in CourseController");
@@ -30,6 +32,7 @@ public class CourseController {
 		
 	}
 	
+	// read the study sets of a course given its id 
 	public void readCourseStudySets(Context ctx) {
 		
 		log.trace("Entering readCourseStudySets in CourseController");
@@ -44,6 +47,7 @@ public class CourseController {
 		}
 	}
 	
+	// read the name of a course given its id 
 	public void readCourseName(Context ctx) {
 		
 		log.trace("Entering readCourseName in CourseController");
@@ -58,7 +62,8 @@ public class CourseController {
 		}
 		
 	}
-		
+	
+	// after checking the new name is not empty, rename a course given its id 
 	public void renameCourse(Context ctx) {
 		
 		log.trace("Entering renameCourse in CourseController");
@@ -81,6 +86,7 @@ public class CourseController {
 		}
 	}
 	
+	// delete a course given its id, cascading
 	public void deleteCourse(Context ctx) {
 		
 		log.trace("Entering deleteCourse in CourseController");
@@ -97,6 +103,7 @@ public class CourseController {
 		
 	}
 	
+	// add a row to the AssignSSC table with study set id and course id 
 	public void assignStudySetToCourse(Context ctx) {
 		
 		log.trace("Entering assignStudySetToCourse in CourseController");

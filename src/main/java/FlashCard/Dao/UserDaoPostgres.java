@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import FlashCard.pojos.User;
 import FlashCard.util.ConnectionUtil;
 
+//leverage jdbc to interact with our postgresql database 
 public class UserDaoPostgres implements UserDao {
 	
 	private static Logger log = Logger.getRootLogger();
@@ -22,6 +23,32 @@ public class UserDaoPostgres implements UserDao {
 		this.connUtil = connUtil;
 	}
 	
+	// check if user with id exists in our table 
+	public static boolean userExists(int userId) {
+		
+		log.debug("Calling userExists in UserDaoPostGres");
+		
+		PreparedStatement stmt; 
+		ConnectionUtil connUtil = new ConnectionUtil();
+		
+		String verify = "select * from \"User\" where user_id = ?";
+		
+		try (Connection conn = connUtil.createConnection()){
+			stmt = conn.prepareStatement(verify);
+			stmt.setInt(1, userId);
+			ResultSet rs = stmt.executeQuery();
+			if (!rs.next()) {
+				log.warn("Called on non existant user");
+				return false;
+			}
+		} catch(SQLException e) {
+			log.warn("Exception thrown " + String.valueOf(e));
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
+	// create user with name and type 
 	@Override
 	public void createUser(User user) {
 		
@@ -41,6 +68,7 @@ public class UserDaoPostgres implements UserDao {
 		}
 	}
 
+	// read courses user is enrolled in 
 	@Override
 	public String readUserCourses(int userId) {
 		
@@ -75,6 +103,7 @@ public class UserDaoPostgres implements UserDao {
 		
 	}
 	
+	// read name of user with id 
 	@Override
 	public String readUserName(int userId) {
 		
@@ -102,8 +131,9 @@ public class UserDaoPostgres implements UserDao {
 			throw new IllegalArgumentException("User " + userId + " does not exist");
 		}
 		return output;
-		
 	}
+	
+	// change name of user 
 	@Override
 	public void renameUser(int userId, String newName) {
 		
@@ -128,6 +158,7 @@ public class UserDaoPostgres implements UserDao {
 
 	}
 
+	// add entry to enrollment table 
 	@Override
 	public void assignUserToCourse(int userId, int courseId) {
 		
@@ -153,6 +184,7 @@ public class UserDaoPostgres implements UserDao {
 
 	}
 
+	// remove user from table, cascading 
 	@Override
 	public void deleteUser(int userId) {
 		
@@ -173,29 +205,5 @@ public class UserDaoPostgres implements UserDao {
 			log.warn("Called on non existant user");
 			throw new IllegalArgumentException("User " + userId + " does not exist");
 		}
-	}
-	
-	public static boolean userExists(int userId) {
-		
-		log.debug("Calling userExists in UserDaoPostGres");
-		
-		PreparedStatement stmt; 
-		ConnectionUtil connUtil = new ConnectionUtil();
-		
-		String verify = "select * from \"User\" where user_id = ?";
-		
-		try (Connection conn = connUtil.createConnection()){
-			stmt = conn.prepareStatement(verify);
-			stmt.setInt(1, userId);
-			ResultSet rs = stmt.executeQuery();
-			if (!rs.next()) {
-				log.warn("Called on non existant user");
-				return false;
-			}
-		} catch(SQLException e) {
-			log.warn("Exception thrown " + String.valueOf(e));
-			e.printStackTrace();
-		}
-		return true;
 	}
 }

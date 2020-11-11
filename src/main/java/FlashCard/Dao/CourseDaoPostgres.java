@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import FlashCard.pojos.Course;
 import FlashCard.util.ConnectionUtil;
 
+//leverage jdbc to interact with our postgresql database 
 public class CourseDaoPostgres implements CourseDao {
 	
 	private static Logger log = Logger.getRootLogger();
@@ -20,6 +21,30 @@ public class CourseDaoPostgres implements CourseDao {
 		this.connUtil = connUtil;
 	}
 	
+	// check if course with id exists in table 
+		public static boolean courseExists(int courseId) {
+			
+			PreparedStatement stmt; 
+			ConnectionUtil connUtil = new ConnectionUtil();
+			
+			String verify = "select * from \"Course\" where course_id = ?";
+			
+			try (Connection conn = connUtil.createConnection()){
+				stmt = conn.prepareStatement(verify);
+				stmt.setInt(1, courseId);
+				ResultSet rs = stmt.executeQuery();
+				if (!rs.next()) {
+					log.warn("Called on non existant course");
+					return false;
+				}
+			} catch(SQLException e) {
+				log.warn("Exception thrown " + String.valueOf(e));
+				e.printStackTrace();
+			}
+			return true;
+		}
+	
+	// create course with name 
 	@Override
 	public void createCourse(Course course) {
 		
@@ -39,6 +64,7 @@ public class CourseDaoPostgres implements CourseDao {
 
 	}
 
+	// read study sets from course with course id 
 	@Override
 	public String readCourseStudySets(int courseId) {
 		
@@ -73,6 +99,7 @@ public class CourseDaoPostgres implements CourseDao {
 		return output;
 	}
 
+	// change name of course with id to newName
 	@Override
 	public void renameCourse(int courseId, String newName) {
 		
@@ -96,6 +123,7 @@ public class CourseDaoPostgres implements CourseDao {
 		}
 	}
 
+	// delete course from table with id 
 	@Override
 	public void deleteCourse(int courseId) {
 		
@@ -118,6 +146,7 @@ public class CourseDaoPostgres implements CourseDao {
 		}
 	}
 
+	// add row to AssignSSC table
 	@Override
 	public void assignStudySetToCourse(int studySetId, int courseId) {
 		
@@ -142,6 +171,7 @@ public class CourseDaoPostgres implements CourseDao {
 		}
 	}
 
+	// read name of course with courseId 
 	@Override
 	public String readCourseName(int courseId) {
 		
@@ -170,27 +200,5 @@ public class CourseDaoPostgres implements CourseDao {
 			log.warn("Called on non existant course");
 			throw new IllegalArgumentException("Course " + courseId + " does not exist");
 		}
-	}
-	
-	public static boolean courseExists(int courseId) {
-		
-		PreparedStatement stmt; 
-		ConnectionUtil connUtil = new ConnectionUtil();
-		
-		String verify = "select * from \"Course\" where course_id = ?";
-		
-		try (Connection conn = connUtil.createConnection()){
-			stmt = conn.prepareStatement(verify);
-			stmt.setInt(1, courseId);
-			ResultSet rs = stmt.executeQuery();
-			if (!rs.next()) {
-				log.warn("Called on non existant course");
-				return false;
-			}
-		} catch(SQLException e) {
-			log.warn("Exception thrown " + String.valueOf(e));
-			e.printStackTrace();
-		}
-		return true;
 	}
 }

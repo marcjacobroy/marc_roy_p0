@@ -1,6 +1,7 @@
 package FlashCard.Dao;
 
 import java.sql.Connection;
+
 import org.apache.log4j.Logger;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -9,6 +10,7 @@ import java.sql.ResultSet;
 import FlashCard.pojos.StudySet;
 import FlashCard.util.ConnectionUtil;
 
+//leverage jdbc to interact with our postgresql database 
 public class StudySetDaoPostgres implements StudySetDao {
 	
 	private static Logger log = Logger.getRootLogger();
@@ -21,6 +23,7 @@ public class StudySetDaoPostgres implements StudySetDao {
 		this.connUtil = connUtil;
 	}
 	
+	// check if study set with id exists in our database 
 	public static boolean studySetExists(int studySetId) {
 		
 		PreparedStatement stmt; 
@@ -41,6 +44,7 @@ public class StudySetDaoPostgres implements StudySetDao {
 		return true;
 	}
 	
+	// create study set with name 
 	@Override
 	public void createStudySet(StudySet studySet) {
 		
@@ -60,6 +64,7 @@ public class StudySetDaoPostgres implements StudySetDao {
 
 	}
 
+	// read cards in study set with id 
 	@Override
 	public String readStudySetCards(int studySetId) {
 		
@@ -93,6 +98,7 @@ public class StudySetDaoPostgres implements StudySetDao {
 		return output;
 	}
 	
+	// retrieve card with lowest score in study set with id 
 	@Override
 	public String getCardWithMinScoreFromStudySet(int studySetId) {
 		log.debug("Calling getCardWithMinScoreFromStudySet in StudySetDaoPostgres on " + studySetId);
@@ -126,6 +132,7 @@ public class StudySetDaoPostgres implements StudySetDao {
 		return output;
 	}
 
+	// change name of study set with id 
 	@Override
 	public void renameStudySet(int studySetId, String newName) {
 		
@@ -149,6 +156,7 @@ public class StudySetDaoPostgres implements StudySetDao {
 		}
 	}
 
+	// remove study set from table 
 	@Override
 	public void deleteStudySet(int studySetId) {
 		
@@ -172,6 +180,7 @@ public class StudySetDaoPostgres implements StudySetDao {
 
 	}
 	
+	// add row to AssignCSS table 
 	@Override
 	public void assignCardToStudySet(int cardId, int studySetId) {
 		
@@ -196,6 +205,7 @@ public class StudySetDaoPostgres implements StudySetDao {
 		}
 	}
 
+	// read name of study set with id 
 	@Override
 	public String readStudySetName(int studySetId) {
 		

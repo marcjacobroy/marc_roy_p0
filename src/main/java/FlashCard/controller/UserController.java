@@ -7,12 +7,14 @@ import FlashCard.service.UserServiceFullStack;
 import io.javalin.http.Context;
 import org.apache.log4j.Logger;
 
+//Control interactions between parameters passed in by user and calls to FullStackService
 public class UserController {
 	
 	private static Logger log = Logger.getRootLogger();
 	
 	UserService userService = new UserServiceFullStack();
 	
+	// validate username and type and then create user 
 	public void createUser(Context ctx) {
 		
 		log.trace("Entering createUser in UserController");
@@ -56,7 +58,7 @@ public class UserController {
 		}
 	}
 	
-	
+	// read all courses that a user is enrolled in 
 	public void readUserCourses(Context ctx) {
 		
 		log.trace("Entering readUserCourses in UserController");
@@ -70,6 +72,7 @@ public class UserController {
 		}
 	}
 	
+	// read name of user given user id 
 	public void readUserName(Context ctx) {
 		
 		log.trace("Entering readUserName in UserController");
@@ -84,7 +87,8 @@ public class UserController {
 		}
 		
 	}
-		
+	
+	// after validating new name, change user's name with user id 
 	public void renameUser(Context ctx) {
 		
 		log.trace("Entering renameUser in UserController");
@@ -107,6 +111,7 @@ public class UserController {
 		}
 	}
 	
+	// delete user with user Id 
 	public void deleteUser(Context ctx) {
 		
 		log.trace("Entering deleteUser in UserController");
@@ -122,6 +127,7 @@ public class UserController {
 		}
 	}
 	
+	// add row to Enrollment table with user id and course id 
 	public void assignUserToCourse(Context ctx) {
 		
 		log.trace("Entering assignUserToCourse in UserController");

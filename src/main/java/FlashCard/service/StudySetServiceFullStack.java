@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import FlashCard.Dao.StudySetDao;
 import FlashCard.Dao.StudySetDaoPostgres;
 
+//currently, simply calls on Dao methods, intermediary between Controllers and Daos 
 public class StudySetServiceFullStack implements StudySetService {
 	
 	private static Logger log = Logger.getRootLogger();

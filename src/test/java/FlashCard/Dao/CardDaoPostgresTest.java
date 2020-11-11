@@ -31,6 +31,7 @@ import java.util.Random;
 
 
 // Credits to Conner Bosch for teaching us how to use Mockito with prepared statements
+// General idea is to verify that SQL statements were ran with correct parameters 
 @RunWith(MockitoJUnitRunner.class)
 public class CardDaoPostgresTest {
 
