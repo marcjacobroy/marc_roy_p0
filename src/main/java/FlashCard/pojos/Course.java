@@ -24,6 +24,10 @@ public class Course {
 		courseCount++;
 	}
 	
+	public Course(String courseName) {
+		this(courseName, null);
+	}
+	
 	public boolean studySetIsInCourse(StudySet studySet) {
 		return studySets.contains(studySet);
 	}

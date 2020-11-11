@@ -4,6 +4,7 @@ import java.util.PriorityQueue;
 
 // A study set, composed of a priority queue of cards 
 public class StudySet {
+	
 	private static int studySetCount;
 	
 	private int studySetId;
