@@ -67,9 +67,23 @@ public class CardController {
 		}
 	}
 	
-	public void updateCard(Context ctx) {
+	public void readCardScore(Context ctx) {
 		
-		log.trace("Entering updateCard in CardController");
+		log.trace("Entering readCardScore in CardController");
+		
+		int cardId = Integer.valueOf(ctx.formParam("cardId"));
+		
+		try {
+			ctx.html("Card score is " + cardService.readCardScore(cardId));
+		} catch(Exception e) {
+			log.warn("Exception was thrown " + String.valueOf(e));
+			ctx.html(String.valueOf(e));
+		}
+	}
+	
+	public void updateCardEntries(Context ctx) {
+		
+		log.trace("Entering updateCardEntries in CardController");
 		
 		int cardId = Integer.valueOf(ctx.formParam("cardId"));
 		
@@ -85,7 +99,7 @@ public class CardController {
 		
 		if (term.length() != 0 && def.length() != 0) {
 			try {
-				cardService.updateCard(cardId, card);
+				cardService.updateCardEntries(cardId, card);
 				ctx.html("Updated card");
 			} catch (Exception e) {
 				log.warn("Exception was thrown " + String.valueOf(e));
@@ -94,6 +108,33 @@ public class CardController {
 		} else {
 			log.warn("Non valid string was enterd for term or def");
 			ctx.html("New term and def must be non empty");
+		}
+		
+	}
+	
+	public void updateCardScore(Context ctx) {
+		
+		log.trace("Entering updateCardScore in CardController");
+		
+		int cardId = Integer.valueOf(ctx.formParam("cardId"));
+		
+		String response = ctx.formParam("response");
+		response = response.toLowerCase().trim();
+		
+		boolean res;
+		
+		if (response.equals("true") || response.equals("false")) {
+			try {
+				res = Boolean.parseBoolean(response);
+				cardService.updateCardScore(cardId, res);
+				ctx.html("Updated card score");
+			} catch (Exception e) {
+				log.warn("Exception was thrown " + String.valueOf(e));
+				ctx.html(String.valueOf(e));
+			}
+		} else {
+			log.warn("Non valid string was entered for response");
+			ctx.html("Response must be 'true' or 'false' ");
 		}
 		
 	}

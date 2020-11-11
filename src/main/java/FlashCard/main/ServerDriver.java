@@ -19,6 +19,8 @@ public class ServerDriver {
 	private static UserController userController = new UserController();
 	
 	private static final String CARD_PATH = "/card";
+	private static final String ENTRIES_PATH = "/entries";
+	private static final String SCORE_PATH = "/score";
 	private static final String TERM_PATH = "/term";
 	private static final String DEF_PATH = "/def";
 	private static final String STUDY_SET_PATH = "/studyset";
@@ -26,22 +28,26 @@ public class ServerDriver {
 	private static final String CARDS_PATH = "/cards";
 	private static final String COURSE_PATH = "/course";
 	private static final String STUDY_SETS_PATH = "/studysets";
+	private static final String MIN_CARD_PATH = "/mincard";
 	private static final String USER_PATH = "/user";
 	private static final String COURSES_PATH = "/courses";
 	
 	public static void main(String[] args) {
 		log.info("Program has started in Server Driver");
-		Javalin app = Javalin.create().start(9095); //sets up and starts our server
+		Javalin app = Javalin.create().start(9096); //sets up and starts our server
 		app.get("/hello", ctx -> ctx.html("Hello World"));
 		app.post(CARD_PATH, ctx -> cardController.createCard(ctx));
 		app.get(CARD_PATH + DEF_PATH, ctx -> cardController.readCardDef(ctx));
 		app.get(CARD_PATH + TERM_PATH, ctx -> cardController.readCardTerm(ctx));
-		app.patch(CARD_PATH, ctx -> cardController.updateCard(ctx));
+		app.get(CARD_PATH + SCORE_PATH, ctx -> cardController.readCardScore(ctx));
+		app.patch(CARD_PATH + ENTRIES_PATH, ctx -> cardController.updateCardEntries(ctx));
+		app.patch(CARD_PATH + SCORE_PATH, ctx -> cardController.updateCardScore(ctx));
 		app.delete(CARD_PATH, ctx -> cardController.deleteCard(ctx));
 		
 		app.post(STUDY_SET_PATH, ctx -> studySetController.createStudySet(ctx));
 		app.get(STUDY_SET_PATH + CARDS_PATH, ctx -> studySetController.readStudySetCards(ctx));
 		app.get(STUDY_SET_PATH + NAME_PATH, ctx -> studySetController.readStudySetName(ctx));
+		app.get(STUDY_SET_PATH + MIN_CARD_PATH, ctx -> studySetController.getCardWithMinScoreFromStudySet(ctx));
 		app.patch(STUDY_SET_PATH, ctx -> studySetController.renameStudySet(ctx));
 		app.delete(STUDY_SET_PATH, ctx -> studySetController.deleteStudySet(ctx));
 		app.put(STUDY_SET_PATH, ctx -> studySetController.assignCardToStudySet(ctx));

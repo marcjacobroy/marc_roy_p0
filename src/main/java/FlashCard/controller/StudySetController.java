@@ -107,6 +107,20 @@ public class StudySetController {
 			ctx.html(String.valueOf(e));
 		}
 	}
+	
+	public void getCardWithMinScoreFromStudySet(Context ctx) {
+		
+		log.trace("Entering getCardWithMinScoreFromStudySet in StudySetController");
+		
+		int studySetId = Integer.valueOf(ctx.formParam("studySetId"));
+		
+		try {
+			ctx.html(studySetService.getCardWithMinScoreFromStudySet(studySetId));
+		} catch (Exception e) {
+			log.warn("Exception was thrown " + String.valueOf(e));
+			ctx.html(String.valueOf(e));
+		}
+	}
 }
 
 

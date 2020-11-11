@@ -22,6 +22,79 @@ public class CardDaoPostgres implements CardDao {
 		this.connUtil = connUtil;
 	}
 
+	public static boolean cardExists(int cardId) {
+		
+		log.debug("Entering cardExists in CardDaoPostGres on " + cardId);
+		
+		PreparedStatement stmt; 
+		ConnectionUtil connUtil = new ConnectionUtil();
+		
+		String verify = "select * from \"Card\" where card_id = ?";
+		
+		try (Connection conn = connUtil.createConnection()){
+			stmt = conn.prepareStatement(verify);
+			stmt.setInt(1, cardId);
+			ResultSet rs = stmt.executeQuery();
+			if (!rs.next()) {
+				log.warn("Called on non existant card");
+				return false;
+			}
+		} catch(SQLException e) {
+			log.warn("Exception thrown " + String.valueOf(e));
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
+	public static int getCountCorrect(int cardId) {
+		
+		log.debug("Entering getCountCorrect in CardDaoPostGres on " + cardId);
+		
+		PreparedStatement stmt; 
+		ConnectionUtil connUtil = new ConnectionUtil();
+		
+		if (cardExists(cardId)) {
+			String verify = "select count_correct from \"Card\" where card_id = ?";
+			try (Connection conn = connUtil.createConnection()) {
+				stmt = conn.prepareStatement(verify);
+				stmt.setInt(1, cardId);
+				ResultSet rs = stmt.executeQuery();
+				rs.next();
+				return rs.getInt("count_correct");
+			} catch (SQLException e) {
+				log.warn("Exception thrown " + String.valueOf(e));
+				e.printStackTrace();
+			} 
+		} else {
+			log.warn("Called on non existant card");
+		}
+		throw new IllegalArgumentException("Negative count");
+	}
+	
+	public static int getCountWrong(int cardId) {
+		
+		log.debug("Entering getCountWrong in CardDaoPostGres on " + cardId);
+		
+		PreparedStatement stmt; 
+		ConnectionUtil connUtil = new ConnectionUtil();
+		
+		if (cardExists(cardId)) {
+			String verify = "select count_wrong from \"Card\" where card_id = ?";
+			try (Connection conn = connUtil.createConnection()) {
+				stmt = conn.prepareStatement(verify);
+				stmt.setInt(1, cardId);
+				ResultSet rs = stmt.executeQuery();
+				rs.next();
+				return rs.getInt("count_wrong");
+			} catch (SQLException e) {
+				log.warn("Exception thrown " + String.valueOf(e));
+				e.printStackTrace();
+			} 
+		} else {
+			log.warn("Called on non existant card");
+		}
+		throw new IllegalArgumentException("Negative count");
+	}
 	@Override
 	public void createCard(Card card) {
 		
@@ -98,11 +171,68 @@ public class CardDaoPostgres implements CardDao {
 			return null;
 		}
 	}
+	
+	@Override
+	public double readCardScore(int cardId) {
+		
+		log.trace("Calling readCardScore in CardDaoPostgres on " + cardId);
+		
+		String sql = "select count_correct, count_wrong from \"Card\" where card_id = ?";
+			
+		try (Connection conn = connUtil.createConnection()) {
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, cardId);
+			ResultSet rsTerm = stmt.executeQuery();
+			if (rsTerm.next()) {
+				int correct = rsTerm.getInt("count_correct");
+				int wrong = rsTerm.getInt("count_wrong");
+				if (correct == 0) {
+					return 0;
+				} else {
+					return (double) correct / ((double) correct + (double) wrong);
+				}
+				
+			} else {
+				log.warn("Called on non existant card");
+				throw new IllegalArgumentException("Card with id " + cardId + " does not exist");
+			}
+		} catch (SQLException e) {
+			log.warn("Exception thrown " + String.valueOf(e));
+			e.printStackTrace();
+		}
+		return -1;
+	}
 
 	@Override
-	public void updateCard(int cardId, Card card) {
+	public void updateCardScore(int cardId, boolean res) {
 		
-		log.debug("Calling updateCard in CardDaoPostGres on " + cardId + " " + card.toString());
+		log.debug("Calling updateCardScore in CardDaoPostGres on " + cardId + " " + cardId + " " + res);
+		
+		String sql = "update \"Card\" set count_correct = ?, count_wrong = ? where card_id = ?";
+		
+		if (cardExists(cardId)) {
+			try (Connection conn = connUtil.createConnection()) {
+				int correct = getCountCorrect(cardId);
+				int wrong = getCountWrong(cardId);
+				stmt = conn.prepareStatement(sql);
+				stmt.setInt(1, res ?  correct + 1 : correct);
+				stmt.setInt(2, res ?  wrong : wrong + 1);
+				stmt.setInt(3, cardId);
+				stmt.executeUpdate();
+			} catch (Exception e) {
+				log.warn("Exception thrown " + String.valueOf(e));
+				e.printStackTrace();
+			}
+		} else {
+			log.warn("Called on non existant card");
+			throw new IllegalArgumentException("Card with id " + cardId + " does not exist");
+		}
+	}
+	
+	@Override
+	public void updateCardEntries(int cardId, Card card) {
+		
+		log.debug("Calling updateCardEntries in CardDaoPostGres on " + cardId + " " + card.toString());
 		
 		String sql = "update \"Card\" set term = ?, def = ?, count_correct = ?, count_wrong = ? where card_id = ?";
 		
@@ -123,7 +253,6 @@ public class CardDaoPostgres implements CardDao {
 			log.warn("Called on non existant card");
 			throw new IllegalArgumentException("Card with id " + cardId + " does not exist");
 		}
-		
 	}
 		
 	
@@ -147,29 +276,5 @@ public class CardDaoPostgres implements CardDao {
 			log.warn("Called on non existant card");
 			throw new IllegalArgumentException("Card with id " + cardId + " does not exist");
 		}
-	}
-	
-	public static boolean cardExists(int cardId) {
-		
-		log.debug("Entering cardExists in CardDaoPostGres on " + cardId);
-		
-		PreparedStatement stmt; 
-		ConnectionUtil connUtil = new ConnectionUtil();
-		
-		String verify = "select * from \"Card\" where card_id = ?";
-		
-		try (Connection conn = connUtil.createConnection()){
-			stmt = conn.prepareStatement(verify);
-			stmt.setInt(1, cardId);
-			ResultSet rs = stmt.executeQuery();
-			if (!rs.next()) {
-				log.warn("Called on non existant card");
-				return false;
-			}
-		} catch(SQLException e) {
-			log.warn("Exception thrown " + String.valueOf(e));
-			e.printStackTrace();
-		}
-		return true;
 	}
 }

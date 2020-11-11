@@ -14,5 +14,7 @@ public interface StudySetDao {
 	public void deleteStudySet(int studySetId);
 	
 	public void assignCardToStudySet(int cardId, int studySetId);
+	
+	public String getCardWithMinScoreFromStudySet(int studySetId);
 
 }

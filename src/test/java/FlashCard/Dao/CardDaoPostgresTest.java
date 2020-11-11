@@ -27,6 +27,8 @@ import FlashCard.pojos.Card;
 import FlashCard.pojos.Entry;
 import FlashCard.util.ConnectionUtil;
 
+import java.util.Random;
+
 
 // Credits to Conner Bosch for teaching us how to use Mockito with prepared statements
 @RunWith(MockitoJUnitRunner.class)
@@ -150,7 +152,7 @@ public class CardDaoPostgresTest {
 	}
 
 	@Test
-	public void updateCardTest() throws SQLException {
+	public void updateCardEntriesTest() throws SQLException {
 		
 		Entry term = new Entry(TEST_TERM2);
 		
@@ -167,7 +169,7 @@ public class CardDaoPostgresTest {
 		
 		int cardId = TEST_CARD_ID;
 		
-		cardDao.updateCard(cardId, card);
+		cardDao.updateCardEntries(cardId, card);
 		
 		
 		verify(spy).setString(1, card.getTerm());
@@ -183,6 +185,33 @@ public class CardDaoPostgresTest {
 		ResultSet rs = utilStmt.executeQuery();
 		
 		assertTrue(rs.next());
+	}
+	
+	@Test
+	public void updateCardScoreTest() throws SQLException {
+		
+		Random rd = new Random();
+		
+		boolean res = rd.nextBoolean();
+		
+		try {
+			String sql = "update \"Card\" set count_correct = ?, count_wrong = ? where card_id = ?";
+			initStmtHelper(sql);
+		} catch(SQLException e) {
+			fail("SQL exception thrown: " + e);
+		}
+		
+		int cardId = TEST_CARD_ID;
+		
+		int correct = CardDaoPostgres.getCountCorrect(cardId);
+		int wrong = CardDaoPostgres.getCountWrong(cardId);
+		
+		cardDao.updateCardScore(cardId, res);
+		
+		verify(spy).setInt(1, res ? correct + 1 : correct);
+		verify(spy).setInt(2, res ?  wrong : wrong + 1);
+		verify(spy).setInt(3, cardId);
+		verify(spy).executeUpdate();
 	}
 	
 	
@@ -258,4 +287,24 @@ public class CardDaoPostgresTest {
 		
 		assertFalse(rs.next());
 	}
+	
+	@Test
+	public void readCardScoreTest() throws SQLException {
+		
+		try {
+			String sql = "select count_correct, count_wrong from \"Card\" where card_id = ?";
+			initStmtHelper(sql);
+		} catch(SQLException e) {
+			fail("SQL exception thrown: " + e);
+		}
+		
+		int cardId = TEST_CARD_ID;
+		
+		cardDao.readCardScore(cardId);
+		
+		verify(spy).setInt(1, cardId);
+		verify(spy).executeQuery();
+	}
+	
+	
 }

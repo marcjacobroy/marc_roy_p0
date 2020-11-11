@@ -47,4 +47,10 @@ public class StudySetServiceFullStack implements StudySetService {
 		studySetDao.assignCardToStudySet(cardId, studySetId);
 	}
 
+	@Override
+	public String getCardWithMinScoreFromStudySet(int studySetId) {
+		log.trace("Calling getCardWithMinScoreFromStudySet in StudySetServiceFullStack on " + studySetId);
+		return studySetDao.getCardWithMinScoreFromStudySet(studySetId);
+	}
+
 }

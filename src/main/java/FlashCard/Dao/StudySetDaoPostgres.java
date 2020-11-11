@@ -21,6 +21,26 @@ public class StudySetDaoPostgres implements StudySetDao {
 		this.connUtil = connUtil;
 	}
 	
+	public static boolean studySetExists(int studySetId) {
+		
+		PreparedStatement stmt; 
+		ConnectionUtil connUtil = new ConnectionUtil();
+		String verify = "select * from \"StudySet\" where study_set_id = ?";
+		try (Connection conn = connUtil.createConnection()){
+			stmt = conn.prepareStatement(verify);
+			stmt.setInt(1, studySetId);
+			ResultSet rs = stmt.executeQuery();
+			if (!rs.next()) {
+				log.warn("Called on non existant study set");
+				return false;
+			}
+		} catch(SQLException e) {
+			log.warn("Exception thrown " + String.valueOf(e));
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
 	@Override
 	public void createStudySet(StudySet studySet) {
 		
@@ -60,6 +80,39 @@ public class StudySetDaoPostgres implements StudySetDao {
 				while (rsStudySets.next()) {
 					String cardInfo = rsStudySets.getString("term") + ": " + rsStudySets.getString("def") + ", ";
 					output = output.concat(cardInfo);
+				}
+
+			} catch (SQLException e) {
+				log.warn("Exception thrown " + String.valueOf(e));
+				e.printStackTrace();
+			} 
+		} else {
+			log.warn("Called on non existant study set");
+			throw new IllegalArgumentException("Study set " + studySetId + " does not exist");
+		}
+		return output;
+	}
+	
+	@Override
+	public String getCardWithMinScoreFromStudySet(int studySetId) {
+		log.debug("Calling getCardWithMinScoreFromStudySet in StudySetDaoPostgres on " + studySetId);
+		
+		String sql = "select * from getCardWithMinScoreFromSet(?);";
+		
+		String output = null;
+		if (studySetExists(studySetId)) {
+			try {
+				Connection connection = connUtil.createConnection();
+				stmt = connection.prepareStatement(sql);
+				stmt.setInt(1, studySetId);
+				ResultSet rsCards = stmt.executeQuery();
+				if (rsCards.next()) {
+					int cardId = rsCards.getInt(1);
+					double cardScore = rsCards.getDouble(2);
+					output = "The lowest scored card in study set " + 
+					studySetId + " is currently card with id " +  cardId + " with score " + cardScore;
+				} else {
+					throw new IllegalArgumentException("Study set " + studySetId + " has no cards");
 				}
 
 			} catch (SQLException e) {
@@ -170,25 +223,5 @@ public class StudySetDaoPostgres implements StudySetDao {
 			throw new IllegalArgumentException("Study set " + studySetId + " does not exist");
 		}
 		return output;
-	}
-	
-	public static boolean studySetExists(int studySetId) {
-		
-		PreparedStatement stmt; 
-		ConnectionUtil connUtil = new ConnectionUtil();
-		String verify = "select * from \"StudySet\" where study_set_id = ?";
-		try (Connection conn = connUtil.createConnection()){
-			stmt = conn.prepareStatement(verify);
-			stmt.setInt(1, studySetId);
-			ResultSet rs = stmt.executeQuery();
-			if (!rs.next()) {
-				log.warn("Called on non existant study set");
-				return false;
-			}
-		} catch(SQLException e) {
-			log.warn("Exception thrown " + String.valueOf(e));
-			e.printStackTrace();
-		}
-		return true;
 	}
 }

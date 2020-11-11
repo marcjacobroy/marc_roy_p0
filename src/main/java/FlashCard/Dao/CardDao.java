@@ -10,7 +10,11 @@ public interface CardDao {
 	
 	public String readCardTerm(int cardId);
 	
-	public void updateCard(int cardId, Card card);
+	public double readCardScore(int cardId);
+	
+	public void updateCardEntries(int cardId, Card card);
+	
+	public void updateCardScore(int cardId, boolean res);
 	
 	public void deleteCard(int cardId);
 	

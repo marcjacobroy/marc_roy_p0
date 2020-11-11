@@ -84,6 +84,11 @@ public class StudySetDaoPostgresTest {
 		rs = utilStmt.executeQuery();
 		rs.next();
 		TEST_SET_ID = rs.getInt("study_set_id");
+		
+		utilStmt = realConnection.prepareStatement("insert into \"AssignCSS\" (card_id, study_set_id) values(?, ?)");
+		utilStmt.setInt(1, TEST_CARD_ID);
+		utilStmt.setInt(2, TEST_SET_ID);
+		utilStmt.executeUpdate(); 
 
 	}
 
@@ -106,6 +111,11 @@ public class StudySetDaoPostgresTest {
 		utilStmt = realConnection.prepareStatement("delete from \"StudySet\" where study_set_name = ?");
 		utilStmt.setString(1, "test_study_set1");
 		utilStmt.executeUpdate();
+		
+		utilStmt = realConnection.prepareStatement("delete from \"AssignCSS\" where card_id = ? and study_set_id = ?");
+		utilStmt.setInt(1, TEST_CARD_ID);
+		utilStmt.setInt(2, TEST_SET_ID);
+		utilStmt.executeUpdate(); 
 		
 		if(stmt != null) {
 			stmt.close();
@@ -260,6 +270,10 @@ public class StudySetDaoPostgresTest {
 	public void assignCardToStudySetTest() {
 		
 		try {
+			 utilStmt = realConnection.prepareStatement("delete from \"AssignCSS\" where card_id = ? and study_set_id = ?");
+			 utilStmt.setInt(1, TEST_CARD_ID);
+			 utilStmt.setInt(2, TEST_SET_ID);
+			 utilStmt.executeUpdate(); 
 			 String sql = "insert into \"AssignCSS\" (card_id, study_set_id) values(?, ?)";
 			 initStmtHelper(sql);
 		} catch(SQLException e) {
@@ -271,6 +285,48 @@ public class StudySetDaoPostgresTest {
 			verify(spy).setInt(1, TEST_CARD_ID);
 			verify(spy).setInt(2, TEST_SET_ID);
 			verify(spy).executeUpdate();
+		} catch(SQLException e) {
+			fail("SQL exception thrown: " + e);
+		}
+	}
+	
+	@Test
+	public void getCardWithMinScoreFromStudySetTest() {
+		
+		try {
+			 String sql = "select * from getCardWithMinScoreFromSet(?);";
+			 initStmtHelper(sql);
+		} catch(SQLException e) {
+			fail("SQL exception thrown: " + e);
+		}
+		
+		try {
+			studySetDao.getCardWithMinScoreFromStudySet(TEST_SET_ID);
+			verify(spy).setInt(1, TEST_SET_ID);
+			verify(spy).executeQuery();
+		} catch(SQLException e) {
+			fail("SQL exception thrown: " + e);
+		}
+	}
+	
+	@Test(expected = Exception.class)
+	public void getCardWithMinScoreFromStudySetTest2() {
+		
+		try {
+			 String sql = "select * from getCardWithMinScoreFromSet(?);";
+			 initStmtHelper(sql);
+			 utilStmt = realConnection.prepareStatement("delete from \"AssignCSS\" where card_id = ? and study_set_id = ?");
+			 utilStmt.setInt(1, TEST_CARD_ID);
+			 utilStmt.setInt(2, TEST_SET_ID);
+			 utilStmt.executeUpdate(); 
+		} catch(SQLException e) {
+			fail("SQL exception thrown: " + e);
+		}
+		
+		try {
+			studySetDao.getCardWithMinScoreFromStudySet(TEST_SET_ID);
+			verify(spy).setInt(1, TEST_SET_ID);
+			verify(spy).executeQuery();
 		} catch(SQLException e) {
 			fail("SQL exception thrown: " + e);
 		}
