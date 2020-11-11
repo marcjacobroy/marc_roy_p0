@@ -1,12 +1,17 @@
 package FlashCard.main;
 
-import io.javalin.Javalin; 
+import io.javalin.Javalin;
+
+import org.apache.log4j.Logger;
+
 import FlashCard.controller.CardController;
 import FlashCard.controller.StudySetController;
 import FlashCard.controller.CourseController;
 import FlashCard.controller.UserController;
 
 public class ServerDriver {
+	
+	private static Logger log = Logger.getRootLogger();
 	
 	private static CardController cardController = new CardController();
 	private static StudySetController studySetController = new StudySetController();
@@ -25,6 +30,7 @@ public class ServerDriver {
 	private static final String COURSES_PATH = "/courses";
 	
 	public static void main(String[] args) {
+		log.info("Program has started in Server Driver");
 		Javalin app = Javalin.create().start(9095); //sets up and starts our server
 		app.get("/hello", ctx -> ctx.html("Hello World"));
 		app.post(CARD_PATH, ctx -> cardController.createCard(ctx));

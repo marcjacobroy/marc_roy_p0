@@ -5,14 +5,16 @@ import FlashCard.pojos.Entry;
 import FlashCard.service.CardService;
 import FlashCard.service.CardServiceFullStack;
 import io.javalin.http.Context;
-
+import org.apache.log4j.Logger;
 public class CardController {
+	
+	private static Logger log = Logger.getRootLogger();
 	
 	CardService cardService = new CardServiceFullStack();
 	
 	public void createCard(Context ctx) {
 		
-		System.out.println("Responding to create card request");
+		log.trace("Entering createCard in CardController");
 		
 		String term = ctx.formParam("term");
 		
@@ -30,38 +32,44 @@ public class CardController {
 				ctx.html("Created card");
 			} catch (Exception e) {
 				ctx.html(String.valueOf(e));
+				log.warn("Exception was thrown " + String.valueOf(e));
 			} 
 		} else {
+			log.warn("Non valid String passed in for Name");
 			ctx.html("Term and def must be non empty");
 		}
 	}
 	
 	public void readCardDef(Context ctx) {
-		System.out.println("Responding to read card def request");
+		
+		log.trace("Entering readCardDef in CardController");
 		
 		int cardId = Integer.valueOf(ctx.formParam("cardId"));
 		try {
 			ctx.html("Card def is " + cardService.readCardDef(cardId));
 		} catch(Exception e) {
+			log.warn("Exception was thrown " + String.valueOf(e));
 			ctx.html(String.valueOf(e));
 		}
 	}
 	
 	public void readCardTerm(Context ctx) {
-		System.out.println("Responding to read card term request");
+		
+		log.trace("Entering readCardTerm in CardController");
 		
 		int cardId = Integer.valueOf(ctx.formParam("cardId"));
 		
 		try {
 			ctx.html("Card term is " + cardService.readCardTerm(cardId));
 		} catch(Exception e) {
+			log.warn("Exception was thrown " + String.valueOf(e));
 			ctx.html(String.valueOf(e));
 		}
-		
 	}
 	
 	public void updateCard(Context ctx) {
-		System.out.println("Responding to update card request");
+		
+		log.trace("Entering updateCard in CardController");
 		
 		int cardId = Integer.valueOf(ctx.formParam("cardId"));
 		
@@ -80,16 +88,19 @@ public class CardController {
 				cardService.updateCard(cardId, card);
 				ctx.html("Updated card");
 			} catch (Exception e) {
+				log.warn("Exception was thrown " + String.valueOf(e));
 				ctx.html(String.valueOf(e));
 			}
 		} else {
+			log.warn("Non valid string was enterd for term or def");
 			ctx.html("New term and def must be non empty");
 		}
 		
 	}
 	
 	public void deleteCard(Context ctx) {
-		System.out.println("Responding to delete card request");
+		
+		log.trace("Entering deletCard in CardController");
 		
 		int cardId = Integer.valueOf(ctx.formParam("cardId"));
 	
@@ -97,6 +108,7 @@ public class CardController {
 			cardService.deleteCard(cardId);
 			ctx.html("Deleted card " + cardId);
 		} catch (Exception e) {
+			log.warn("Exception was thrown " + String.valueOf(e));
 			ctx.html(String.valueOf(e));
 		}
 	}

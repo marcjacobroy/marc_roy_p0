@@ -1,6 +1,7 @@
 package FlashCard.Dao;
 
 import java.sql.Connection;
+import org.apache.log4j.Logger;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
@@ -9,6 +10,8 @@ import FlashCard.pojos.StudySet;
 import FlashCard.util.ConnectionUtil;
 
 public class StudySetDaoPostgres implements StudySetDao {
+	
+	private static Logger log = Logger.getRootLogger();
 	
 	private PreparedStatement stmt; 
 	
@@ -20,6 +23,9 @@ public class StudySetDaoPostgres implements StudySetDao {
 	
 	@Override
 	public void createStudySet(StudySet studySet) {
+		
+		log.debug("Calling createStudySet in StudySetDaoPostgres on " + studySet.toString());
+		
 		String sql = "insert into \"StudySet\" (study_set_name) values(?)"; 
 		
 		try {
@@ -28,6 +34,7 @@ public class StudySetDaoPostgres implements StudySetDao {
 			stmt.setString(1, studySet.getStudySetName());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
+			log.warn("Exception thrown " + String.valueOf(e));
 			e.printStackTrace();
 		}
 
@@ -35,6 +42,9 @@ public class StudySetDaoPostgres implements StudySetDao {
 
 	@Override
 	public String readStudySetCards(int studySetId) {
+		
+		log.debug("Calling readStudySetCards in StudySetDaoPostgres on " + studySetId);
+		
 		String sql = "select \"StudySet\".study_set_name, \"AssignCSS\".card_id, "
 				+ "\"Card\".term, \"Card\".def from \"StudySet\", \"AssignCSS\", \"Card\"where "
 				+ "\"StudySet\".study_set_id = \"AssignCSS\".study_set_id and \"Card\".card_id = "
@@ -53,9 +63,11 @@ public class StudySetDaoPostgres implements StudySetDao {
 				}
 
 			} catch (SQLException e) {
+				log.warn("Exception thrown " + String.valueOf(e));
 				e.printStackTrace();
 			} 
 		} else {
+			log.warn("Called on non existant study set");
 			throw new IllegalArgumentException("Study set " + studySetId + " does not exist");
 		}
 		return output;
@@ -63,6 +75,9 @@ public class StudySetDaoPostgres implements StudySetDao {
 
 	@Override
 	public void renameStudySet(int studySetId, String newName) {
+		
+		log.debug("Calling renameStudySet in StudySetDaoPostgres on " + studySetId + " " + newName);
+		
 		String sql = "update \"StudySet\" set study_set_name = ? where study_set_id = ?";
 		
 		if (studySetExists(studySetId)) {
@@ -72,15 +87,20 @@ public class StudySetDaoPostgres implements StudySetDao {
 				stmt.setInt(2, studySetId);
 				stmt.executeUpdate();
 			} catch (SQLException e) {
+				log.warn("Exception thrown " + String.valueOf(e));
 				e.printStackTrace();
 			} 
 		} else {
+			log.warn("Called on non existant study set");
 			throw new IllegalArgumentException("Study set " + studySetId + " does not exist");
 		}
 	}
 
 	@Override
 	public void deleteStudySet(int studySetId) {
+		
+		log.debug("Calling deleteStudySet in StudySetDaoPostgres on " + studySetId);
+		
 		String sql = "delete from \"StudySet\" where study_set_id = ?";
 
 		if (studySetExists(studySetId)) {
@@ -89,9 +109,11 @@ public class StudySetDaoPostgres implements StudySetDao {
 				stmt.setInt(1, studySetId);
 				stmt.executeUpdate();
 			} catch (SQLException e) {
+				log.warn("Exception thrown " + String.valueOf(e));
 				e.printStackTrace();
 			} 
 		} else {
+			log.warn("Called on non existant study set");
 			throw new IllegalArgumentException("Study set " + studySetId + " does not exist");
 		}
 
@@ -99,6 +121,9 @@ public class StudySetDaoPostgres implements StudySetDao {
 	
 	@Override
 	public void assignCardToStudySet(int cardId, int studySetId) {
+		
+		log.debug("Calling assignCardToStudySet in StudySetDaoPostgres on " + cardId + " "  + studySetId);
+		
 		String sql = "insert into \"AssignCSS\" (card_id, study_set_id) values(?, ?)";
 
 		if (studySetExists(studySetId) && CardDaoPostgres.cardExists(cardId)) {
@@ -108,9 +133,11 @@ public class StudySetDaoPostgres implements StudySetDao {
 				stmt.setInt(2, studySetId);
 				stmt.executeUpdate();
 			} catch (SQLException e) {
+				log.warn("Exception thrown " + String.valueOf(e));
 				e.printStackTrace();
 			} 
 		} else {
+			log.warn("Called on non existant study set or card");
 			throw new IllegalArgumentException("Study set " + studySetId + " does not exist "
 					+ "and/or card " + cardId + " does not exist");
 		}
@@ -118,6 +145,9 @@ public class StudySetDaoPostgres implements StudySetDao {
 
 	@Override
 	public String readStudySetName(int studySetId) {
+		
+		log.debug("Calling readStudySetName in StudySetDaoPostgres on " + studySetId);
+		
 		String sql = "select study_set_name from \"StudySet\" where study_set_id = ?";
 		
 		String output = null;
@@ -132,15 +162,18 @@ public class StudySetDaoPostgres implements StudySetDao {
 				output = studySetName;
 
 			} catch (SQLException e) {
+				log.warn("Exception thrown " + String.valueOf(e));
 				e.printStackTrace();
 			} 
 		} else {
+			log.warn("Called on non existant study set");
 			throw new IllegalArgumentException("Study set " + studySetId + " does not exist");
 		}
 		return output;
 	}
 	
 	public static boolean studySetExists(int studySetId) {
+		
 		PreparedStatement stmt; 
 		ConnectionUtil connUtil = new ConnectionUtil();
 		String verify = "select * from \"StudySet\" where study_set_id = ?";
@@ -149,12 +182,13 @@ public class StudySetDaoPostgres implements StudySetDao {
 			stmt.setInt(1, studySetId);
 			ResultSet rs = stmt.executeQuery();
 			if (!rs.next()) {
+				log.warn("Called on non existant study set");
 				return false;
 			}
 		} catch(SQLException e) {
+			log.warn("Exception thrown " + String.valueOf(e));
 			e.printStackTrace();
 		}
 		return true;
 	}
-
 }

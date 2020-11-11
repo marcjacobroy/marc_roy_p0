@@ -5,17 +5,23 @@ import FlashCard.pojos.User.UserType;
 import FlashCard.service.UserService;
 import FlashCard.service.UserServiceFullStack;
 import io.javalin.http.Context;
+import org.apache.log4j.Logger;
 
 public class UserController {
+	
+	private static Logger log = Logger.getRootLogger();
+	
 	UserService userService = new UserServiceFullStack();
 	
 	public void createUser(Context ctx) {
-		System.out.println("Responding to create user request");
+		
+		log.trace("Entering createUser in UserController");
 		
 		String userName = ctx.formParam("userName");
 		UserType userType;
 		String type = ctx.formParam("userType");
 		type = type.toLowerCase().trim();
+		
 		try {
 			switch(type) {
 			case "instructor":
@@ -25,6 +31,7 @@ public class UserController {
 				userType = UserType.STUDENT;
 				break;
 			default:
+				log.warn("Input invalid userType into context");
 				throw new IllegalArgumentException("Please input either 'instructor' or 'student' for user type");
 			}
 			
@@ -35,18 +42,21 @@ public class UserController {
 				
 				ctx.html("Created user");
 			} else {
+				log.warn("Entered non valid String for userName");
 				ctx.html("User name must be non empty");
 			}
 			
 			
 		} catch(IllegalArgumentException e) {
+			log.warn("Encountered IllegalArgumentException " + String.valueOf(e));
 			ctx.html(String.valueOf(e));
 		}
 	}
 	
 	
 	public void readUserCourses(Context ctx) {
-		System.out.println("Responding to read User study sets");
+		
+		log.trace("Entering readUserCourses in UserController");
 		
 		int userId = Integer.valueOf((ctx.formParam("userId")));
 		
@@ -58,20 +68,23 @@ public class UserController {
 	}
 	
 	public void readUserName(Context ctx) {
-		System.out.println("Responding to read user name request");
+		
+		log.trace("Entering readUserName in UserController");
 		
 		int userId = Integer.valueOf((ctx.formParam("userId")));
 		
 		try {
 			ctx.html("User name is " + userService.readUserName(userId));
 		} catch (Exception e) {
+			log.warn("Exception was thrown " + String.valueOf(e));
 			ctx.html(String.valueOf(e));
 		}
 		
 	}
 		
 	public void renameUser(Context ctx) {
-		System.out.println("Responding to rename user request");
+		
+		log.trace("Entering renameUser in UserController");
 		
 		int userId = Integer.valueOf(ctx.formParam("userId"));
 		
@@ -82,15 +95,18 @@ public class UserController {
 				userService.renameUser(userId, newName);
 				ctx.html("renamed user");
 			} catch (Exception e) {
+				log.warn("Exception was thrown " + String.valueOf(e));
 				ctx.html(String.valueOf(e));
 			} 
 		} else {
+			log.warn("Entered non valid String for user name");
 			ctx.html("New name must be non empty");
 		}
 	}
 	
 	public void deleteUser(Context ctx) {
-		System.out.println("Responding to delete user request");
+		
+		log.trace("Entering deleteUser in UserController");
 		
 		int userId = Integer.valueOf(ctx.formParam("userId"));
 		
@@ -98,12 +114,14 @@ public class UserController {
 			userService.deleteUser(userId);
 			ctx.html("deleted user");
 		} catch (Exception e) {
+			log.warn("Exception was thrown " + String.valueOf(e));
 			ctx.html(String.valueOf(e));
 		}
 	}
 	
 	public void assignUserToCourse(Context ctx) {
-		System.out.println("Responding to assign course to user request");
+		
+		log.trace("Entering assignUserToCourse in UserController");
 		
 		int userId = Integer.valueOf(ctx.formParam("userId"));
 		int courseId = Integer.valueOf(ctx.formParam("courseId"));
@@ -112,6 +130,7 @@ public class UserController {
 			userService.assignUserToCourse(userId, courseId);
 			ctx.html("Assigned user " + userId + " to course " + courseId);
 		} catch (Exception e) {
+			log.warn("Exception was thrown " + String.valueOf(e));
 			ctx.html(String.valueOf(e));
 		}
 	}
