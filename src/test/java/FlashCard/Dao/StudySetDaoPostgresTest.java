@@ -20,15 +20,16 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import FlashCard.util.ConnectionUtil;
-import FlashCard.pojos.Card;
-import FlashCard.pojos.Entry;
 import FlashCard.pojos.StudySet;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StudySetDaoPostgresTest {
 	
-	private static final int DUMMY_SET_ID = 2;
-	private static final String TEST_SET_NAME = "testSet";
+	private int TEST_SET_ID;
+	private final String TEST_SET_NAME = "aitn noboasdf;;o14o32iu ";
+	private int TEST_CARD_ID;
+	private final String TEST_CARD_TERM = "aoisud;asu n13roq32ijr ;";
+	private final String TEST_CARD_DEF = "alsdj; @#P08ur23 ";
 	
 	public StudySetDaoPostgres studySetDao = new StudySetDaoPostgres();
 	
@@ -60,30 +61,38 @@ public class StudySetDaoPostgresTest {
 		//set up Dao to use the mocked object
 		studySetDao.setConnUtil(connUtil);
 		
-		utilStmt = realConnection.prepareStatement("insert into \"Card\" (count_correct, count_wrong, term, def, study_set_id) values(?, ?, ?, ?, ?)");
+		utilStmt = realConnection.prepareStatement("insert into \"Card\" (count_correct, count_wrong, term, def) values(?, ?, ?, ?)");
 		utilStmt.setInt(1, 0);
 		utilStmt.setInt(2, 0);
-		utilStmt.setString(3, "test");
-		utilStmt.setString(4, "pass");
-		utilStmt.setInt(5, DUMMY_SET_ID);
+		utilStmt.setString(3, TEST_CARD_TERM);
+		utilStmt.setString(4, TEST_CARD_DEF);
 		utilStmt.executeUpdate();
+		
+		utilStmt = realConnection.prepareStatement("select card_id from \"Card\" where term = ? and def = ?");
+		utilStmt.setString(1, TEST_CARD_TERM);
+		utilStmt.setString(2, TEST_CARD_DEF);
+		ResultSet rs = utilStmt.executeQuery();
+		rs.next();
+		TEST_CARD_ID = rs.getInt("card_id");
 		
 		utilStmt = realConnection.prepareStatement("insert into \"StudySet\" (study_set_name) values(?)");
 		utilStmt.setString(1, TEST_SET_NAME);
 		utilStmt.executeUpdate();
+		
+		utilStmt = realConnection.prepareStatement("select study_set_id from \"StudySet\" where study_set_name = ?");
+		utilStmt.setString(1, TEST_SET_NAME);
+		rs = utilStmt.executeQuery();
+		rs.next();
+		TEST_SET_ID = rs.getInt("study_set_id");
 
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		utilStmt = realConnection.prepareStatement("delete from \"Card\" where term = ? AND def = ?");
-		utilStmt.setString(1, "test0");
-		utilStmt.setString(2, "pass0");
-		utilStmt.executeUpdate();
 		
 		utilStmt = realConnection.prepareStatement("delete from \"Card\" where term = ? AND def = ?");
-		utilStmt.setString(1, "test");
-		utilStmt.setString(2, "pass");
+		utilStmt.setString(1, TEST_CARD_TERM);
+		utilStmt.setString(2, TEST_CARD_DEF);
 		utilStmt.executeUpdate();
 		
 		utilStmt = realConnection.prepareStatement("delete from \"StudySet\" where study_set_name = ?");
@@ -205,22 +214,65 @@ public class StudySetDaoPostgresTest {
 	}
 	
 	@Test
-	public void readStudySetTest() {
+	public void readStudySetCardsTest() {
 		
 		try {
-			 String sql = "select term, def from \"Card\" where study_set_id = ?";
+			String sql = "select \"StudySet\".study_set_name, \"AssignCSS\".card_id, "
+					+ "\"Card\".term, \"Card\".def from \"StudySet\", \"AssignCSS\", \"Card\"where "
+					+ "\"StudySet\".study_set_id = \"AssignCSS\".study_set_id and \"Card\".card_id = "
+					+ "\"AssignCSS\".card_id and \"StudySet\".study_set_id = ?";
 			 initStmtHelper(sql);
 		} catch(SQLException e) {
 			fail("SQL exception thrown: " + e);
 		}
 		
 		try {
-			studySetDao.readStudySet(DUMMY_SET_ID);
-			verify(spy).setInt(1, DUMMY_SET_ID);
+			studySetDao.readStudySetCards(TEST_SET_ID);
+			verify(spy).setInt(1, TEST_SET_ID);
 			verify(spy).executeQuery();
 		} catch(SQLException e) {
 			fail("SQL exception thrown: " + e);
 		}
 		
+	}
+	
+	@Test
+	public void readStudySetNameTest() {
+		
+		try {
+			String sql = "select study_set_name from \"StudySet\" where study_set_id = ?";
+			 initStmtHelper(sql);
+		} catch(SQLException e) {
+			fail("SQL exception thrown: " + e);
+		}
+		
+		try {
+			studySetDao.readStudySetName(TEST_SET_ID);
+			verify(spy).setInt(1, TEST_SET_ID);
+			verify(spy).executeQuery();
+		} catch(SQLException e) {
+			fail("SQL exception thrown: " + e);
+		}
+		
+	}
+	
+	@Test
+	public void assignCardToStudySetTest() {
+		
+		try {
+			 String sql = "insert into \"AssignCSS\" (card_id, study_set_id) values(?, ?)";
+			 initStmtHelper(sql);
+		} catch(SQLException e) {
+			fail("SQL exception thrown: " + e);
+		}
+		
+		try {
+			studySetDao.assignCardToStudySet(TEST_CARD_ID, TEST_SET_ID);
+			verify(spy).setInt(1, TEST_CARD_ID);
+			verify(spy).setInt(2, TEST_SET_ID);
+			verify(spy).executeUpdate();
+		} catch(SQLException e) {
+			fail("SQL exception thrown: " + e);
+		}
 	}
 }

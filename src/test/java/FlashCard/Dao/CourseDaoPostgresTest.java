@@ -21,7 +21,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import FlashCard.util.ConnectionUtil;
 import FlashCard.pojos.Course;
-import FlashCard.pojos.StudySet;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class CourseDaoPostgresTest {
@@ -49,8 +49,15 @@ public class CourseDaoPostgresTest {
 	public static void tearDownAfterClass() throws Exception {
 	}
 	
-	private static final String TEST_COURSE_NAME = "testCourse";
-	private static final int DUMMY_COURSE_ID = 2;
+	private static final String TEST_COURSE_NAME = "awertq2334rtqabdf";
+	private int TEST_COURSE_ID;
+	
+	private static final String TEST_SET_NAME = "24rq23rq4%@##@$";
+	private int TEST_SET_ID;
+	
+	private static final String TEST_RENAME_COURSE_NAME = "12312(*&@#)(*&$";
+	private static final String TEST_CREATE_COURSE_NAME = "unliekly name asdf;lkj(*Us;lkdjD#";
+	
 	
 	@Before
 	public void setUp() throws Exception {
@@ -62,18 +69,45 @@ public class CourseDaoPostgresTest {
 		utilStmt = realConnection.prepareStatement("insert into \"Course\" (course_name) values(?)");
 		utilStmt.setString(1, TEST_COURSE_NAME);
 		utilStmt.executeUpdate();
+		
+		utilStmt = realConnection.prepareStatement("select course_id from \"Course\" where course_name = ?");
+		utilStmt.setString(1, TEST_COURSE_NAME);
+		ResultSet rs = utilStmt.executeQuery();
+		rs.next();
+		TEST_COURSE_ID = rs.getInt("course_id");
+		
+		utilStmt = realConnection.prepareStatement("insert into \"StudySet\" (study_set_name) values(?)");
+		utilStmt.setString(1, TEST_SET_NAME);
+		utilStmt.executeUpdate();
+		
+		utilStmt = realConnection.prepareStatement("select study_set_id from \"StudySet\" where study_set_name = ?");
+		utilStmt.setString(1, TEST_SET_NAME);
+		rs = utilStmt.executeQuery();
+		rs.next();
+		TEST_SET_ID = rs.getInt("study_set_id");
+		
+		
 
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		
-		utilStmt = realConnection.prepareStatement("delete from \"Course\" where course_name = ?");
-		utilStmt.setString(1, TEST_COURSE_NAME);
+		utilStmt = realConnection.prepareStatement("delete from \"Course\" where course_id = ?");
+		utilStmt.setInt(1, TEST_COURSE_ID);
 		utilStmt.executeUpdate();
 		
 		utilStmt = realConnection.prepareStatement("delete from \"Course\" where course_name = ?");
-		utilStmt.setString(1, "rename test");
+		utilStmt.setString(1, TEST_CREATE_COURSE_NAME);
+		utilStmt.executeUpdate();
+		
+		utilStmt = realConnection.prepareStatement("delete from \"AssignSSC\" where study_set_id = ? or course_id = ?");
+		utilStmt.setInt(1, TEST_SET_ID);
+		utilStmt.setInt(2, TEST_COURSE_ID);
+		utilStmt.executeUpdate();
+		
+		utilStmt = realConnection.prepareStatement("delete from \"StudySet\" where study_set_id = ?");
+		utilStmt.setInt(1, TEST_SET_ID);
 		utilStmt.executeUpdate();
 		
 		if(stmt != null) {
@@ -101,7 +135,7 @@ public class CourseDaoPostgresTest {
 	@Test
 	public void createCourseTest() {
 		
-		Course course = new Course("test_course");
+		Course course = new Course(TEST_CREATE_COURSE_NAME);
 		try {
 			 String sql = "insert into \"Course\" (course_name) values(?)";
 			 initStmtHelper(sql);
@@ -127,24 +161,11 @@ public class CourseDaoPostgresTest {
 			fail("SQL exception thrown: " + e);
 		}
 		
-		int courseId = 0;
-		String newName = "";
+		courseDao.renameCourse(TEST_COURSE_ID, TEST_RENAME_COURSE_NAME);
 		
 		try {
-			utilStmt = realConnection.prepareStatement("select course_id from \"Course\" where course_name = ?");
-			utilStmt.setString(1, TEST_COURSE_NAME);
-			ResultSet rsCourseId = utilStmt.executeQuery();
-			rsCourseId.next();
-			courseId = rsCourseId.getInt("course_id");
-			newName = "rename test";
-			courseDao.renameCourse(courseId, newName);
-		} catch(SQLException e) {
-			fail("SQL exception thrown: " + e);
-		}
-		
-		try {
-			verify(spy).setString(1, newName);
-			verify(spy).setInt(2, courseId);
+			verify(spy).setString(1, TEST_RENAME_COURSE_NAME);
+			verify(spy).setInt(2, TEST_COURSE_ID);
 			verify(spy).executeUpdate();
 		} catch(SQLException e) {
 			fail("SQL Exception thrown: " + e);
@@ -183,7 +204,7 @@ public class CourseDaoPostgresTest {
 	}
 	
 	@Test
-	public void readCourseTest() {
+	public void readCourseStudySetsTest() {
 		
 		try {
 			 String sql = "select \"Course\".course_name, \"AssignSSC\".study_set_id, "
@@ -196,12 +217,51 @@ public class CourseDaoPostgresTest {
 		}
 		
 		try {
-			courseDao.readCourse(DUMMY_COURSE_ID);
-			verify(spy).setInt(1, DUMMY_COURSE_ID);
+			courseDao.readCourseStudySets(TEST_COURSE_ID);
+			verify(spy).setInt(1, TEST_COURSE_ID);
 			verify(spy).executeQuery();
 		} catch(SQLException e) {
 			fail("SQL exception thrown: " + e);
 		}
-		
 	}
+		
+		@Test
+		public void assignStudySetToCourseTest() {
+			
+			try {
+				 String sql = "insert into \"AssignSSC\" (study_set_id, course_id) values(?, ?)";
+				 initStmtHelper(sql);
+			} catch(SQLException e) {
+				fail("SQL exception thrown: " + e);
+			}
+			
+			try {
+				courseDao.assignStudySetToCourse(TEST_SET_ID, TEST_COURSE_ID);
+				verify(spy).setInt(1, TEST_SET_ID);
+				verify(spy).setInt(2, TEST_COURSE_ID);
+				verify(spy).executeUpdate();
+			} catch(SQLException e) {
+				fail("SQL exception thrown: " + e);
+			}
+		}
+		
+		@Test
+		public void readCourseNameTest() {
+			
+			try {
+				String sql = "select course_name from \"Course\" where course_id = ?";
+				 initStmtHelper(sql);
+			} catch(SQLException e) {
+				fail("SQL exception thrown: " + e);
+			}
+			
+			try {
+				courseDao.readCourseName(TEST_COURSE_ID);
+				verify(spy).setInt(1, TEST_COURSE_ID);
+				verify(spy).executeQuery();
+			} catch(SQLException e) {
+				fail("SQL exception thrown: " + e);
+			}
+			
+		}
 }

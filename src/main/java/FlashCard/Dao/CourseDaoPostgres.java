@@ -34,7 +34,7 @@ public class CourseDaoPostgres implements CourseDao {
 	}
 
 	@Override
-	public String readCourse(int courseId) {
+	public String readCourseStudySets(int courseId) {
 		String sql = "select \"Course\".course_name, \"AssignSSC\".study_set_id, "
 				+ "\"StudySet\".study_set_name from \"Course\", \"AssignSSC\", \"StudySet\"where "
 				+ "\"Course\".course_id = \"AssignSSC\".course_id and \"StudySet\".study_set_id = "
@@ -84,7 +84,43 @@ public class CourseDaoPostgres implements CourseDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 	}
+
+	@Override
+	public void assignStudySetToCourse(int studySetId, int courseId) {
+		String sql = "insert into \"AssignSSC\" (study_set_id, course_id) values(?, ?)";
+
+		try (Connection conn = connUtil.createConnection()) {
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, studySetId);
+			stmt.setInt(2, courseId);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public String readCourseName(int courseId) {
+		String sql = "select course_name from \"Course\" where course_id = ?";
+		
+		String output = null;
+		try {
+			Connection connection = connUtil.createConnection();
+			stmt = connection.prepareStatement(sql);
+			stmt.setInt(1, courseId);
+			ResultSet rsCourseName = stmt.executeQuery();
+			rsCourseName.next();
+			String courseName = rsCourseName.getString("course_name");
+			output = courseName;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return output;
+	}
+	
+	
 
 }

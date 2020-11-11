@@ -1,14 +1,18 @@
 package FlashCard.Dao;
 
 import FlashCard.pojos.StudySet;
-import FlashCard.pojos.Card;
 public interface StudySetDao {
 	
 	public void createStudySet(StudySet studySet);
 	
-	public String readStudySet(int studySetId);
+	public String readStudySetCards(int studySetId);
+	
+	public String readStudySetName(int studySetId);
 	
 	public void renameStudySet(int studySetId, String newName);
 	
 	public void deleteStudySet(int studySetId);
+	
+	public void assignCardToStudySet(int cardId, int studySetId);
+
 }

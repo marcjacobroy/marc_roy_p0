@@ -13,8 +13,6 @@ import FlashCard.util.ConnectionUtil;
 
 public class CardDaoPostgres implements CardDao {
 	
-	private static final int DEFAULT_STUDYSET = 2;
-	
 	private PreparedStatement stmt; 
 	
 	private ConnectionUtil connUtil;
@@ -25,19 +23,15 @@ public class CardDaoPostgres implements CardDao {
 
 	@Override
 	public void createCard(Card card) {
-		String sql = "insert into \"Card\" (count_correct, count_wrong, term, def, study_set_id) values( ?, ?, ?, ?, ?)"; 
+		String sql = "insert into \"Card\" (count_correct, count_wrong, term, def) values(?, ?, ?, ?)"; 
 		
 		try {
 			Connection connection = connUtil.createConnection();
 			stmt = connection.prepareStatement(sql);
-			if (stmt == null) {
-				System.out.println("null statement");
-			}
 			stmt.setInt(1, card.getCountCorrect());
 			stmt.setInt(2,  card.getCountWrong());
 			stmt.setString(3,  card.getTerm());
 			stmt.setString(4,  card.getDef());
-			stmt.setInt(5,  DEFAULT_STUDYSET);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

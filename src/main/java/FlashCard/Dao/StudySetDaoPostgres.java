@@ -34,17 +34,21 @@ public class StudySetDaoPostgres implements StudySetDao {
 	}
 
 	@Override
-	public String readStudySet(int studySetId) {
-		String sql = "select term, def from \"Card\" where study_set_id = ?";
+	public String readStudySetCards(int studySetId) {
+		String sql = "select \"StudySet\".study_set_name, \"AssignCSS\".card_id, "
+				+ "\"Card\".term, \"Card\".def from \"StudySet\", \"AssignCSS\", \"Card\"where "
+				+ "\"StudySet\".study_set_id = \"AssignCSS\".study_set_id and \"Card\".card_id = "
+				+ "\"AssignCSS\".card_id and \"StudySet\".study_set_id = ?";
+		
 		String output = "";
 		try {
 			Connection connection = connUtil.createConnection();
 			stmt = connection.prepareStatement(sql);
 			stmt.setInt(1, studySetId);
-			ResultSet rsCards = stmt.executeQuery();
-			while(rsCards.next()) {
-				String cardText = rsCards.getString("term") + " " + rsCards.getString("def") + "\n";
-				output.concat(cardText);
+			ResultSet rsStudySets = stmt.executeQuery();
+			while(rsStudySets.next()) {
+				String cardInfo = rsStudySets.getString("term") +": " + rsStudySets.getString("def") + ", ";
+				output.concat(cardInfo);
 			}
 			return output;
 			
@@ -81,6 +85,41 @@ public class StudySetDaoPostgres implements StudySetDao {
 			e.printStackTrace();
 		}
 
+	}
+	
+	@Override
+	public void assignCardToStudySet(int cardId, int studySetId) {
+		String sql = "insert into \"AssignCSS\" (card_id, study_set_id) values(?, ?)";
+
+		try (Connection conn = connUtil.createConnection()) {
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, cardId);
+			stmt.setInt(2, studySetId);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public String readStudySetName(int studySetId) {
+		String sql = "select study_set_name from \"StudySet\" where study_set_id = ?";
+		
+		String output = null;
+		try {
+			Connection connection = connUtil.createConnection();
+			stmt = connection.prepareStatement(sql);
+			stmt.setInt(1, studySetId);
+			ResultSet rsStudySetName = stmt.executeQuery();
+			rsStudySetName.next();
+			String studySetName = rsStudySetName.getString("user_name");
+			output = studySetName;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return output;
 	}
 
 }

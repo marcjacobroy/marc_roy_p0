@@ -65,8 +65,12 @@ public class User {
 		this.courses.add(course);
 	}
 
-	public UserType getUserType() {
-		return userType;
+	public String getUserType() {
+		if (userType == UserType.INSTRUCTOR) {
+			return "Instructor";
+		} else {
+			return "Student";
+		}
 	}
 
 	public void setUserType(UserType userType) {
