@@ -20,36 +20,39 @@ public class UserController {
 		String userName = ctx.formParam("userName");
 		UserType userType;
 		String type = ctx.formParam("userType");
-		type = type.toLowerCase().trim();
 		
-		try {
-			switch(type) {
-			case "instructor":
-				userType = UserType.INSTRUCTOR;
-				break;
-			case "student":
-				userType = UserType.STUDENT;
-				break;
-			default:
-				log.warn("Input invalid userType into context");
-				throw new IllegalArgumentException("Please input either 'instructor' or 'student' for user type");
-			}
-			
-			if (userName.length() != 0) {
-				User user = new User(userName, userType);
-				
-				userService.createUser(user);
-				
-				ctx.html("Created user");
-			} else {
-				log.warn("Entered non valid String for userName");
-				ctx.html("User name must be non empty");
-			}
-			
-			
-		} catch(IllegalArgumentException e) {
-			log.warn("Encountered IllegalArgumentException " + String.valueOf(e));
-			ctx.html(String.valueOf(e));
+		if (type != null) {
+			type = type.toLowerCase().trim();
+			try {
+				switch (type) {
+				case "instructor":
+					userType = UserType.INSTRUCTOR;
+					break;
+				case "student":
+					userType = UserType.STUDENT;
+					break;
+				default:
+					log.warn("Input invalid userType into context");
+					throw new IllegalArgumentException("Please input either 'instructor' or 'student' for user type");
+				}
+
+				if (userName.length() != 0) {
+					User user = new User(userName, userType);
+
+					userService.createUser(user);
+
+					ctx.html("Created user");
+				} else {
+					log.warn("Entered non valid String for userName");
+					ctx.html("User name must be non empty");
+				}
+
+			} catch (IllegalArgumentException e) {
+				log.warn("Encountered IllegalArgumentException " + String.valueOf(e));
+				ctx.html(String.valueOf(e));
+			} 
+		} else {
+			ctx.html("Don't forget the user type!");
 		}
 	}
 	
