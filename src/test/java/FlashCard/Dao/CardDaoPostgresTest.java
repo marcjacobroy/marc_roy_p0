@@ -34,6 +34,7 @@ public class CardDaoPostgresTest {
 	
 	private static final String TEST_TERM = "no one will ever use this 12r1 :SD:flabsd )#@#ub";
 	private static final String TEST_DEF = "also nobody gon use thias 2;3rq;jn;lkSj08(@";
+	private int TEST_CARD_ID;
 	
 	private static final String TEST_TERM2 = "really not likely 134;ln :LK3se G[W ";
 	private static final String TEST_DEF2 = "also not nlieky likely 123r :LN3";
@@ -69,12 +70,18 @@ public class CardDaoPostgresTest {
 		
 		
 		utilStmt = realConnection.prepareStatement("insert into \"Card\" (count_correct, count_wrong, term, def) values(?, ?, ?, ?)");
-		
 		utilStmt.setInt(1, 0);
 		utilStmt.setInt(2, 0);
 		utilStmt.setString(3, TEST_TERM);
 		utilStmt.setString(4, TEST_DEF);
 		utilStmt.executeUpdate();
+		
+		utilStmt = realConnection.prepareStatement("select card_id from \"Card\" where term = ? and def = ?");
+		utilStmt.setString(1, TEST_TERM);
+		utilStmt.setString(2, TEST_DEF);
+		ResultSet rs = utilStmt.executeQuery();
+		rs.next();
+		TEST_CARD_ID = rs.getInt("card_id");
 		
 		
 	}
@@ -238,24 +245,17 @@ public class CardDaoPostgresTest {
 	@Test
 	public void deleteCardTest() throws SQLException {
 		
-		Entry term = new Entry(TEST_TERM);
-		
-		Entry def = new Entry(TEST_DEF);
-		
-		Card card = new Card(term, def);
-		
 		try {
-			String sql = "delete from \"Card\" where term = ? and def = ?";
+			String sql = "delete from \"Card\" where card_id = ?";;
 			initStmtHelper(sql);
 		} catch(SQLException e) {
 			fail("SQL exception thrown: " + e);
 		}
 		
-		cardDao.deleteCard(card);
+		cardDao.deleteCard(TEST_CARD_ID);
 		
 		
-		verify(spy).setString(1, card.getTerm());
-		verify(spy).setString(2, card.getDef());
+		verify(spy).setInt(1, TEST_CARD_ID);
 		verify(spy).executeUpdate();
 		
 		utilStmt = realConnection.prepareStatement("select * from \"Card\" where term = ? and def = ?");

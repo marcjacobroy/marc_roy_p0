@@ -97,13 +97,12 @@ public class CardDaoPostgres implements CardDao {
 	}
 	
 	@Override
-	public void deleteCard(Card card) {
-		String sql = "delete from \"Card\" where term = ? and def = ?";
+	public void deleteCard(int cardId) {
+		String sql = "delete from \"Card\" where card_id = ?";
 
 		try (Connection conn = connUtil.createConnection()) {
 			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, card.getTerm());
-			stmt.setString(2, card.getDef());
+			stmt.setInt(1, cardId);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

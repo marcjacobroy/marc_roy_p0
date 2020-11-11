@@ -1,31 +1,35 @@
 package FlashCard.service;
 
-import java.util.List;
-
 import FlashCard.pojos.Card;
 import FlashCard.Dao.CardDao;
 import FlashCard.Dao.CardDaoPostgres;
 
 public class CardServiceFullStack implements CardService {
 	
-	CardDao cardDao  = new CardDaoPostgres();
+	CardDao cardDao = new CardDaoPostgres();
 	
 	@Override
-	public Card createCard(Card card) {
+	public void createCard(Card card) {
 		cardDao.createCard(card);
-		return card;
 	}
 
 	@Override
-	public List<Card> getAllCardsByStudySetId(int studySetId) {
-		// TODO Auto-generated method stub
-		return null;
+	public String readCardDef(int cardId) {
+		return cardDao.readCardDef(cardId);
 	}
 
 	@Override
-	public List<Card> getAllCardsByCourseId(int courseId) {
-		// TODO Auto-generated method stub
-		return null;
+	public String readCardTerm(int cardId) {
+		return cardDao.readCardTerm(cardId);
 	}
 
+	@Override
+	public void updateCard(int cardId, Card card) {
+		cardDao.updateCard(cardId, card);
+	}
+
+	@Override
+	public void deleteCard(int cardId) {
+		cardDao.deleteCard(cardId);
+	}
 }

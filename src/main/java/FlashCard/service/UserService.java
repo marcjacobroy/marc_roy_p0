@@ -1,8 +1,8 @@
-package FlashCard.Dao;
+package FlashCard.service;
+
 import FlashCard.pojos.User;
 
-public interface UserDao {
-	
+public interface UserService {
 	public void createUser(User user);
 	
 	public String readUserCourses(int userId);

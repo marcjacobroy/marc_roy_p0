@@ -1,19 +1,21 @@
 package FlashCard.service;
 
-import java.util.List;
 
 import FlashCard.pojos.StudySet;
 
 // structure for cache used for storing study sets 
 public interface StudySetService {
 	
-	public StudySet createStudySet(String studySetName);
+	public void createStudySet(StudySet studySet);
 	
-	public List<StudySet> getAllStudySets();
+	public String readStudySetCards(int studySetId);
 	
-	public boolean containsStudySet (StudySet studySet);
+	public String readStudySetName(int studySetId);
 	
-	public boolean containsStudySetWithId(int id);
+	public void renameStudySet(int studySetId, String newName);
 	
-	public StudySet getStudySetWithId (int id); 
+	public void deleteStudySet(int studySetId);
+	
+	public void assignCardToStudySet(int cardId, int studySetId);
+
 }

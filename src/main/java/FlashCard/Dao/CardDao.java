@@ -12,6 +12,6 @@ public interface CardDao {
 	
 	public void updateCard(int cardId, Card card);
 	
-	public void deleteCard(Card card);
+	public void deleteCard(int cardId);
 	
 }

@@ -1,25 +1,21 @@
 package FlashCard.service;
 
-import java.util.List;
 
 import FlashCard.pojos.Course;
-import FlashCard.pojos.Instructor;
 
 //Structure of cache for courses 
 public interface CourseService {
 	
-	public Course createCourse(String courseName, Instructor instructor);
+	public void createCourse(Course course);
 	
-	public List<Course> getAllCourses();
+	public String readCourseStudySets(int courseId);
 	
-	public boolean containsCourse (Course course);
+	public String readCourseName(int courseId);
+		
+	public void renameCourse(int courseId, String newName);
 	
-	public boolean containsCourseWithId(int id);
+	public void deleteCourse(int courseId);
 	
-	public boolean containsCourseWithCourseName(String courseName);
-	
-	public Course getCourseWithId (int id); 
-	
-	public Course getCourseWithCourseName (String CourseName); 
+	public void assignStudySetToCourse(int studySetId, int courseId);
 
 }

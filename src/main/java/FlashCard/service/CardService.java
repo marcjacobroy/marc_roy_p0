@@ -1,13 +1,16 @@
 package FlashCard.service;
 
-import java.util.List;
 import FlashCard.pojos.Card;
 
 public interface CardService {
 	
-	public Card createCard(Card card);
+	public void createCard(Card card);
 	
-	public List<Card> getAllCardsByStudySetId(int studySetId);
+	public String readCardDef(int cardId);
 	
-	public List<Card> getAllCardsByCourseId(int courseId);
+	public String readCardTerm(int cardId);
+	
+	public void updateCard(int cardId, Card card);
+	
+	public void deleteCard(int cardId);
 }
