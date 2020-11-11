@@ -12,11 +12,16 @@ public class CourseController {
 	public void createCourse(Context ctx) {
 		System.out.println("Responding to create course request");
 		
-		Course course = new Course(ctx.formParam("courseName"));
+		String courseName = ctx.formParam("courseName");
 		
-		courseService.createCourse(course);
+		if (courseName.length() != 0) {
+			Course course = new Course(ctx.formParam("courseName"));
+			courseService.createCourse(course);
+			ctx.html("Created course");
+		} else {
+			ctx.html("Course must have non empty name");
+		}
 		
-		ctx.html("Created course");
 	}
 	
 	public void readCourseStudySets(Context ctx) {
@@ -24,9 +29,11 @@ public class CourseController {
 		
 		int courseId = Integer.valueOf((ctx.formParam("courseId")));
 		
-		ctx.html(courseService.readCourseStudySets(courseId));
-		
-		ctx.html("Read course study sets");
+		try {
+			ctx.html("Course study sets are: " + courseService.readCourseStudySets(courseId));
+		} catch (Exception e) {
+			ctx.html(String.valueOf(e));
+		}
 	}
 	
 	public void readCourseName(Context ctx) {
@@ -34,9 +41,11 @@ public class CourseController {
 		
 		int courseId = Integer.valueOf((ctx.formParam("courseId")));
 		
-		ctx.html(courseService.readCourseName(courseId));
-		
-		ctx.html("Read course name");
+		try {
+			ctx.html("Course name is: " + courseService.readCourseName(courseId));
+		} catch (Exception e) {
+			ctx.html(String.valueOf(e));
+		}
 		
 	}
 		
@@ -47,8 +56,16 @@ public class CourseController {
 		
 		String newName = ctx.formParam("newName");
 		
-		courseService.renameCourse(courseId, newName);
-		ctx.html("renamed course");
+		if (newName.length() != 0) {
+			try {
+				courseService.renameCourse(courseId, newName);
+				ctx.html("renamed course");
+			} catch (Exception e) {
+				ctx.html(String.valueOf(e));
+			} 
+		} else {
+			ctx.html("New course name must be non empty");
+		}
 	}
 	
 	public void deleteCourse(Context ctx) {
@@ -56,8 +73,12 @@ public class CourseController {
 		
 		int courseId = Integer.valueOf(ctx.formParam("courseId"));
 		
-		courseService.deleteCourse(courseId);
-		ctx.html("deleted course");
+		try {
+			courseService.deleteCourse(courseId);
+			ctx.html("deleted course");
+		} catch (Exception e) {
+			ctx.html(String.valueOf(e));
+		}
 		
 	}
 	
@@ -67,7 +88,11 @@ public class CourseController {
 		int studySetId = Integer.valueOf(ctx.formParam("studySetId"));
 		int courseId = Integer.valueOf(ctx.formParam("courseId"));
 		
-		courseService.assignStudySetToCourse(studySetId, courseId);
-		ctx.html("assigned study set to course");
+		try {
+			courseService.assignStudySetToCourse(studySetId, courseId);
+			ctx.html("assigned study set " + studySetId + " to course " + courseId);
+		} catch (Exception e) {
+			ctx.html(String.valueOf(e));
+		}
 	}
 }

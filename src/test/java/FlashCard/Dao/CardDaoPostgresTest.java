@@ -22,9 +22,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+
 import FlashCard.pojos.Card;
 import FlashCard.pojos.Entry;
 import FlashCard.util.ConnectionUtil;
+
 
 // Credits to Conner Bosch for teaching us how to use Mockito with prepared statements
 @RunWith(MockitoJUnitRunner.class)
@@ -82,8 +84,6 @@ public class CardDaoPostgresTest {
 		ResultSet rs = utilStmt.executeQuery();
 		rs.next();
 		TEST_CARD_ID = rs.getInt("card_id");
-		
-		
 	}
 
 	@After
@@ -165,14 +165,7 @@ public class CardDaoPostgresTest {
 			fail("SQL exception thrown: " + e);
 		}
 		
-		utilStmt = realConnection.prepareStatement("select card_id from \"Card\" where term = ? and def = ?");
-		utilStmt.setString(1, TEST_TERM);
-		utilStmt.setString(2, TEST_DEF);
-		
-		ResultSet rsCardId = utilStmt.executeQuery();
-		rsCardId.next();
-		
-		int cardId = rsCardId.getInt("card_id");
+		int cardId = TEST_CARD_ID;
 		
 		cardDao.updateCard(cardId, card);
 		

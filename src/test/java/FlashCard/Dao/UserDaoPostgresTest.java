@@ -252,7 +252,7 @@ public class UserDaoPostgresTest {
 	}
 		
 		@Test
-		public void assignCourseToUserTest() {
+		public void assignUserToCourseTest() {
 			
 			try {
 				String sql = "insert into \"Enrollment\" (user_id, course_id) values(?, ?)";
@@ -262,7 +262,7 @@ public class UserDaoPostgresTest {
 			}
 			
 			try {
-				userDao.assignCourseToUser(TEST_USER_ID, TEST_COURSE_ID);
+				userDao.assignUserToCourse(TEST_USER_ID, TEST_COURSE_ID);
 				verify(spy).setInt(1, TEST_USER_ID);
 				verify(spy).setInt(2, TEST_COURSE_ID);
 				verify(spy).executeUpdate();

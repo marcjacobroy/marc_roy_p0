@@ -11,7 +11,7 @@ public interface UserService {
 	
 	public void renameUser(int userId, String newName);
 	
-	public void assignCourseToUser(int userId, int courseId);
+	public void assignUserToCourse(int userId, int courseId);
 	
 	public void deleteUser(int userId);
 }

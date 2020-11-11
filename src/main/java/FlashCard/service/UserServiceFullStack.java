@@ -28,8 +28,8 @@ public class UserServiceFullStack implements UserService {
 	}
 
 	@Override
-	public void assignCourseToUser(int userId, int courseId) {
-		userDao.assignCourseToUser(userId, courseId);
+	public void assignUserToCourse(int userId, int courseId) {
+		userDao.assignUserToCourse(userId, courseId);
 	}
 
 	@Override

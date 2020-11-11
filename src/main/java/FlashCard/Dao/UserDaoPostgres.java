@@ -13,7 +13,7 @@ public class UserDaoPostgres implements UserDao {
 
 	private PreparedStatement stmt; 
 	
-	private ConnectionUtil connUtil;
+	private ConnectionUtil connUtil = new ConnectionUtil();
 	
 	public void setConnUtil(ConnectionUtil connUtil) {
 		this.connUtil = connUtil;
@@ -41,21 +41,24 @@ public class UserDaoPostgres implements UserDao {
 				+ "\"Enrollment\".user_id and \"User\".user_id = ?;";
 		
 		String output = "";
-		try {
-			Connection connection = connUtil.createConnection();
-			stmt = connection.prepareStatement(sql);
-			stmt.setInt(1, userId);
-			ResultSet rsCourses = stmt.executeQuery();
-			while(rsCourses.next()) {
-				String courseName = rsCourses.getString("course_name") + ", ";
-				output.concat(courseName);
-			}
-			return output;
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (userExists(userId)) {
+			try {
+				Connection connection = connUtil.createConnection();
+				stmt = connection.prepareStatement(sql);
+				stmt.setInt(1, userId);
+				ResultSet rsCourses = stmt.executeQuery();
+				while (rsCourses.next()) {
+					String courseName = rsCourses.getString("course_name") + ", ";
+					output = output.concat(courseName);
+				}
+				return output;
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} 
+		} else {
+			throw new IllegalArgumentException("User " + userId + " does not exist");
 		}
-		
 		return output;
 		
 	}
@@ -65,19 +68,22 @@ public class UserDaoPostgres implements UserDao {
 		String sql = "select user_name from \"User\" where user_id = ?";
 		
 		String output = null;
-		try {
-			Connection connection = connUtil.createConnection();
-			stmt = connection.prepareStatement(sql);
-			stmt.setInt(1, userId);
-			ResultSet rsUserName = stmt.executeQuery();
-			rsUserName.next();
-			String userName = rsUserName.getString("user_name");
-			output = userName;
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (userExists(userId)) {
+			try {
+				Connection connection = connUtil.createConnection();
+				stmt = connection.prepareStatement(sql);
+				stmt.setInt(1, userId);
+				ResultSet rsUserName = stmt.executeQuery();
+				rsUserName.next();
+				String userName = rsUserName.getString("user_name");
+				output = userName;
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} 
+		} else {
+			throw new IllegalArgumentException("User " + userId + " does not exist");
 		}
-		
 		return output;
 		
 	}
@@ -85,28 +91,37 @@ public class UserDaoPostgres implements UserDao {
 	public void renameUser(int userId, String newName) {
 		String sql = "update \"User\" set user_name = ? where user_id = ?";
 		
-		try (Connection conn = connUtil.createConnection()) {
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, newName);
-			stmt.setInt(2, userId);
-			stmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (userExists(userId)) {
+			try (Connection conn = connUtil.createConnection()) {
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, newName);
+				stmt.setInt(2, userId);
+				stmt.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} 
+		} else {
+			throw new IllegalArgumentException("User " + userId + " does not exist");
 		}
 
 	}
 
 	@Override
-	public void assignCourseToUser(int userId, int courseId) {
+	public void assignUserToCourse(int userId, int courseId) {
 		String sql = "insert into \"Enrollment\" (user_id, course_id) values(?, ?)";
 
-		try (Connection conn = connUtil.createConnection()) {
-			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, userId);
-			stmt.setInt(2, courseId);
-			stmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (userExists(userId) && CourseDaoPostgres.courseExists(courseId)) {
+			try (Connection conn = connUtil.createConnection()) {
+				stmt = conn.prepareStatement(sql);
+				stmt.setInt(1, userId);
+				stmt.setInt(2, courseId);
+				stmt.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} 
+		} else {
+			throw new IllegalArgumentException("User " + userId + " does not exist "
+					+ "and/or course " + courseId + " does not exist");
 		}
 
 	}
@@ -115,12 +130,33 @@ public class UserDaoPostgres implements UserDao {
 	public void deleteUser(int userId) {
 		String sql = "delete from \"User\" where user_id = ?";
 
-		try (Connection conn = connUtil.createConnection()) {
-			stmt = conn.prepareStatement(sql);
+		if (userExists(userId)) {
+			try (Connection conn = connUtil.createConnection()) {
+				stmt = conn.prepareStatement(sql);
+				stmt.setInt(1, userId);
+				stmt.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} 
+		} else {
+			throw new IllegalArgumentException("User " + userId + " does not exist");
+		}
+	}
+	
+	public static boolean userExists(int userId) {
+		PreparedStatement stmt; 
+		ConnectionUtil connUtil = new ConnectionUtil();
+		String verify = "select * from \"User\" where user_id = ?";
+		try (Connection conn = connUtil.createConnection()){
+			stmt = conn.prepareStatement(verify);
 			stmt.setInt(1, userId);
-			stmt.executeUpdate();
-		} catch (SQLException e) {
+			ResultSet rs = stmt.executeQuery();
+			if (!rs.next()) {
+				return false;
+			}
+		} catch(SQLException e) {
 			e.printStackTrace();
 		}
+		return true;
 	}
 }

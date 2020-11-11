@@ -12,11 +12,14 @@ public class StudySetController {
 	public void createStudySet(Context ctx) {
 		System.out.println("Responding to create study set request");
 		
-		StudySet studySet = new StudySet(ctx.formParam("studySetName"));
-		
-		studySetService.createStudySet(studySet);
-		
-		ctx.html("Created study set");
+		String studySetName = ctx.formParam("studySetName");
+		if (studySetName.length() != 0) {
+			StudySet studySet = new StudySet(ctx.formParam("studySetName"));
+			studySetService.createStudySet(studySet);
+			ctx.html("Created study set");
+		} else {
+			ctx.html("Study set must have non empty name");
+		}
 	}
 	
 	public void readStudySetCards(Context ctx) {
@@ -24,9 +27,11 @@ public class StudySetController {
 		
 		int studySetId = Integer.valueOf((ctx.formParam("studySetId")));
 		
-		ctx.html(studySetService.readStudySetCards(studySetId));
-		
-		ctx.html("Read study set cards");
+		try {
+			ctx.html("Study set cards are: " + studySetService.readStudySetCards(studySetId));
+		} catch (Exception e) {
+			ctx.html(String.valueOf(e));
+		}
 	}
 	
 	public void readStudySetName(Context ctx) {
@@ -34,9 +39,11 @@ public class StudySetController {
 		
 		int studySetId = Integer.valueOf((ctx.formParam("studySetId")));
 		
-		ctx.html(studySetService.readStudySetName(studySetId));
-		
-		ctx.html("Read study set name");
+		try {
+			ctx.html("Study set name is " + studySetService.readStudySetName(studySetId));
+		} catch (Exception e) {
+			ctx.html(String.valueOf(e));
+		}
 	}
 	
 	public void renameStudySet(Context ctx) {
@@ -46,8 +53,16 @@ public class StudySetController {
 		
 		String newName = ctx.formParam("newName");
 		
-		studySetService.renameStudySet(studySetId, newName);
-		ctx.html("renamed study set");
+		if (newName.length() != 0) {
+			try {
+				studySetService.renameStudySet(studySetId, newName);
+				ctx.html("renamed study set");
+			} catch (Exception e) {
+				ctx.html(String.valueOf(e));
+			}
+		} else {
+			ctx.html("New name must not be empty");
+		}
 	}
 	
 	public void deleteStudySet(Context ctx) {
@@ -55,8 +70,12 @@ public class StudySetController {
 		
 		int studySetId = Integer.valueOf(ctx.formParam("studySetId"));
 		
-		studySetService.deleteStudySet(studySetId);
-		ctx.html("deleted study set");
+		try {
+			studySetService.deleteStudySet(studySetId);
+			ctx.html("deleted study set");
+		} catch (Exception e) {
+			ctx.html(String.valueOf(e));
+		}
 	}
 	
 	public void assignCardToStudySet(Context ctx) {
@@ -65,9 +84,15 @@ public class StudySetController {
 		int studySetId = Integer.valueOf(ctx.formParam("studySetId"));
 		int cardId = Integer.valueOf(ctx.formParam("cardId"));
 		
-		studySetService.assignCardToStudySet(cardId, studySetId);
-		ctx.html("assigned card to study set");
+		try {
+			studySetService.assignCardToStudySet(cardId, studySetId);
+			ctx.html("Assigned card " + cardId + " to study set " + studySetId);
+		} catch (Exception e) {
+			ctx.html(String.valueOf(e));
+		}
 	}
+	
+	
 
 }
 
